@@ -1,0 +1,9 @@
+.bounce-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.bounce-card {
+  transform-origin: center center;
+}

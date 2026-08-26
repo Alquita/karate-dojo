@@ -1,0 +1,39 @@
+.enso {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.pista {
+  stroke: var(--border);
+}
+
+.trazo {
+  stroke: var(--indigo);
+  transition: stroke-dashoffset 0.9s var(--ease-smooth);
+}
+
+.centro {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+}
+
+.numero {
+  font-family: var(--font-mono);
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--indigo);
+}
+
+.etiqueta {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}

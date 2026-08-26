@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
+import styles from "./EnsoProgress.module.css";
 
 const SIZE = 128;
 const STROKE = 10;
@@ -10,17 +11,17 @@ export default function EnsoProgress({ asistidas, meta }) {
   const [dibujado, setDibujado] = useState(false);
 
   useEffect(() => {
-    const t = setTimeout(() => setDibujado(true), 60);
+    const t = setTimeout(() => setDibujado(true), 80);
     return () => clearTimeout(t);
   }, []);
 
   const offset = CIRCUNFERENCIA * (1 - (dibujado ? pct : 0) / 100);
 
   return (
-    <div className="enso" style={{ width: SIZE, height: SIZE }}>
+    <div className={styles.enso} style={{ width: SIZE, height: SIZE }}>
       <svg width={SIZE} height={SIZE} viewBox={`0 0 ${SIZE} ${SIZE}`}>
         <circle
-          className="enso__pista"
+          className={styles.pista}
           cx={SIZE / 2}
           cy={SIZE / 2}
           r={RADIUS}
@@ -28,7 +29,7 @@ export default function EnsoProgress({ asistidas, meta }) {
           strokeWidth={STROKE}
         />
         <circle
-          className="enso__trazo"
+          className={styles.trazo}
           cx={SIZE / 2}
           cy={SIZE / 2}
           r={RADIUS}
@@ -40,9 +41,9 @@ export default function EnsoProgress({ asistidas, meta }) {
           transform={`rotate(-90 ${SIZE / 2} ${SIZE / 2})`}
         />
       </svg>
-      <div className="enso__centro">
-        <span className="enso__numero">{pct}%</span>
-        <span className="enso__etiqueta">esta semana</span>
+      <div className={styles.centro}>
+        <span className={styles.numero}>{pct}%</span>
+        <span className={styles.etiqueta}>esta semana</span>
       </div>
     </div>
   );

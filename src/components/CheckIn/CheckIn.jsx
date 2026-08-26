@@ -4,6 +4,7 @@ import { colorParaCinta } from "../../data/categories";
 import { formatoCorto, semanaActual, toISODate } from "../../utils/dates";
 import WeekTimeline from "./WeekTimeline";
 import EnsoProgress from "./EnsoProgress";
+import styles from "./CheckIn.module.css";
 
 export default function CheckIn() {
   const [dni, setDni] = useState("");
@@ -41,34 +42,34 @@ export default function CheckIn() {
   const color = alumno ? colorParaCinta(alumno.cinta) : null;
 
   return (
-    <div className="checkin">
-      <div className="checkin__panel">
-        <p className="checkin__eyebrow">Entrada al dojo</p>
-        <h1 className="checkin__title">Registrar asistencia</h1>
-        <div className="checkin__form">
-          <input
-            className="checkin__input"
-            type="text"
-            inputMode="numeric"
-            placeholder="Documento"
-            value={dni}
-            onChange={(e) => setDni(e.target.value)}
-            onKeyDown={handleKeyDown}
-            autoFocus
-          />
-          <button className="btn btn--primary" onClick={handleRegistrar} disabled={cargando}>
-            {cargando ? "Buscando…" : "Registrar"}
-          </button>
-        </div>
-        {error && <p className="checkin__error">{error}</p>}
+    <div className={styles.panel}>
+      <p className={styles.eyebrow}>Entrada al dojo</p>
+      <h1 className={`${styles.title} gradient-text`}>
+        Registrar asistencia
+      </h1>
+      <div className={styles.form}>
+        <input
+          className={`input ${styles.input}`}
+          type="text"
+          inputMode="numeric"
+          placeholder="Documento"
+          value={dni}
+          onChange={(e) => setDni(e.target.value)}
+          onKeyDown={handleKeyDown}
+          autoFocus
+        />
+        <button className="btn btn--primary" onClick={handleRegistrar} disabled={cargando}>
+          {cargando ? "Buscando…" : "Registrar"}
+        </button>
       </div>
+      {error && <p className={styles.error}>{error}</p>}
 
       {alumno && (
-        <div className="ficha" key={alumno.id + alumno.historial.length}>
-          <div className="ficha__header">
+        <div key={alumno.id + alumno.historial.length} className={styles.ficha}>
+          <div className={styles.ficha__header}>
             <div>
-              <p className="ficha__grupo">{alumno.grupo}</p>
-              <h2 className="ficha__nombre">{alumno.nombre}</h2>
+              <p className={styles.ficha__grupo}>{alumno.grupo}</p>
+              <h2 className={styles.ficha__nombre}>{alumno.nombre}</h2>
               <span
                 className="badge"
                 style={{
@@ -83,15 +84,13 @@ export default function CheckIn() {
             <EnsoProgress asistidas={contarEstaSemana(alumno.historial)} meta={alumno.metaSemanal} />
           </div>
 
-          <div className="ficha__semana">
-            <p className="ficha__seccion-label">Asistencias de la semana</p>
-            <WeekTimeline historial={alumno.historial} />
-          </div>
+          <p className={styles.ficha__seccion-label}>Asistencias de la semana</p>
+          <WeekTimeline historial={alumno.historial} />
 
-          <div className="ficha__datos">
-            <Dato label="Ultima clase" valor={alumno.historial[0] ? formatoCorto(alumno.historial[0]) : "Sin registros"} />
-            <Dato label="Proximo examen" valor={alumno.proximoExamen ? formatoCorto(alumno.proximoExamen) : "Sin definir"} />
-            <Dato label="Ultimo examen rendido" valor={alumno.ultimoExamen ? formatoCorto(alumno.ultimoExamen) : "Todavia no rindio"} />
+          <div className={styles.ficha__datos}>
+            <Dato titulo="Ultima clase" valor={alumno.historial[0] ? formatoCorto(alumno.historial[0]) : "Sin registros"} />
+            <Dato titulo="Proximo examen" valor={alumno.proximoExamen ? formatoCorto(alumno.proximoExamen) : "Sin definir"} />
+            <Dato titulo="Ultimo examen rendido" valor={alumno.ultimoExamen ? formatoCorto(alumno.ultimoExamen) : "Todavia no rindio"} />
           </div>
         </div>
       )}
@@ -99,18 +98,16 @@ export default function CheckIn() {
   );
 }
 
-function Dato({ label, valor }) {
+function Dato({ titulo, valor }) {
   return (
-    <div className="ficha__dato">
-      <p className="ficha__dato-label">{label}</p>
-      <p className="ficha__dato-valor">{valor}</p>
+    <div className={styles.ficha__dato}>
+      <p className={styles.ficha__dato-label}>{titulo}</p>
+      <p className={styles.ficha__dato-valor}>{valor}</p>
     </div>
   );
 }
 
 function contarEstaSemana(historial) {
-  // el timeline ya filtra por la semana visualmente; acá contamos cuántos
-  // de los últimos registros caen dentro de la semana actual para el anillo
   const isos = semanaActual().map((d) => toISODate(d));
   return historial.filter((h) => isos.includes(h)).length;
 }

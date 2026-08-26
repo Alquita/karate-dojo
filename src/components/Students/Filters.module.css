@@ -1,0 +1,25 @@
+.filters {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+  animation: slideUp 0.4s var(--ease-bounce) both;
+  animation-delay: 0.05s;
+}
+
+.select {
+  min-width: 0;
+}
+
+.nuevo {
+  margin-left: auto;
+}
+
+@media (max-width: 600px) {
+  .filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .nuevo { margin-left: 0; }
+}

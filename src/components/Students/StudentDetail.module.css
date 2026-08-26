@@ -1,0 +1,112 @@
+.detalle {
+  padding: 24px;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.grupo {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  margin-bottom: 4px;
+}
+
+.nombre {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.confirm {
+  padding: 16px;
+  background: var(--danger-soft);
+  border: 1px solid rgba(197, 48, 48, 0.2);
+  border-radius: var(--radius-sm);
+  margin-bottom: 16px;
+}
+
+.confirm p {
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.confirmButtons {
+  display: flex;
+  gap: 10px;
+}
+
+.lista {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  margin-bottom: 20px;
+}
+
+.fila {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.fila dt {
+  font-size: 13px;
+  color: var(--ink-muted);
+}
+
+.fila dd {
+  font-size: 14px;
+  font-weight: 500;
+  text-align: right;
+}
+
+.planillaBtn {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.notas {
+  border-top: 1px solid var(--border);
+  padding-top: 16px;
+}
+
+.vacio {
+  font-size: 13px;
+  color: var(--ink-muted);
+  margin-bottom: 12px;
+}
+
+.nota {
+  font-size: 13px;
+  padding: 8px 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+}
+
+.notaForm {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.notaForm .input {
+  flex: 1;
+}
