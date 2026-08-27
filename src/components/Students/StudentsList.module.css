@@ -32,6 +32,53 @@
 .grid {
   display: flex;
   flex-direction: column;
+  gap: 22px;
+}
+
+.grupo {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.grupoBanda {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.grupoBanda[data-variant="rojo"] {
+  background: linear-gradient(135deg, var(--indigo), var(--indigo-light));
+  box-shadow: var(--shadow-indigo);
+}
+
+.grupoBanda[data-variant="negro"] {
+  background: linear-gradient(135deg, var(--sumi), #2c2c2c);
+}
+
+.grupoContador {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.22);
+  font-size: 11px;
+}
+
+.grupoCards {
+  display: flex;
+  flex-direction: column;
   gap: 10px;
 }
 
@@ -45,6 +92,36 @@
   color: var(--ink-muted);
   padding: 24px;
   text-align: center;
+}
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 40px 20px;
+  overflow-y: auto;
+  background: rgba(10, 10, 11, 0.62);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  animation: fadeIn 0.2s ease both;
+}
+
+:global(.light) .modalOverlay {
+  background: rgba(250, 248, 244, 0.55);
+}
+
+.modalPanel {
+  width: 100%;
+  max-width: 880px;
+  margin: auto;
+  animation: slideUp 0.35s var(--ease-bounce) both;
+}
+
+@media (max-width: 600px) {
+  .modalOverlay { padding: 16px 10px; }
 }
 
 @media (max-width: 900px) {

@@ -3,7 +3,7 @@ import { useRef } from "react";
 export default function SpotlightCard({
   children,
   className = "",
-  spotlightColor = "rgba(43, 58, 85, 0.12)",
+  spotlightColor = "rgba(211, 32, 42, 0.14)",
 }) {
   const divRef = useRef(null);
 

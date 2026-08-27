@@ -5,17 +5,33 @@ const SIZE = 128;
 const STROKE = 10;
 const RADIUS = (SIZE - STROKE) / 2;
 const CIRCUNFERENCIA = 2 * Math.PI * RADIUS;
+const DURACION = 1400;
+const ARRANQUE = 450;
 
 export default function EnsoProgress({ asistidas, meta }) {
   const pct = meta > 0 ? Math.min(100, Math.round((asistidas / meta) * 100)) : 0;
-  const [dibujado, setDibujado] = useState(false);
+  const [valor, setValor] = useState(0);
 
   useEffect(() => {
-    const t = setTimeout(() => setDibujado(true), 80);
-    return () => clearTimeout(t);
-  }, []);
+    let rafId;
+    const timeoutId = setTimeout(() => {
+      const inicio = performance.now();
+      const tick = (ahora) => {
+        const t = Math.min((ahora - inicio) / DURACION, 1);
+        const eased = 1 - Math.pow(1 - t, 3);
+        setValor(pct * eased);
+        if (t < 1) rafId = requestAnimationFrame(tick);
+      };
+      rafId = requestAnimationFrame(tick);
+    }, ARRANQUE);
 
-  const offset = CIRCUNFERENCIA * (1 - (dibujado ? pct : 0) / 100);
+    return () => {
+      clearTimeout(timeoutId);
+      cancelAnimationFrame(rafId);
+    };
+  }, [pct]);
+
+  const offset = CIRCUNFERENCIA * (1 - valor / 100);
 
   return (
     <div className={styles.enso} style={{ width: SIZE, height: SIZE }}>
@@ -42,7 +58,7 @@ export default function EnsoProgress({ asistidas, meta }) {
         />
       </svg>
       <div className={styles.centro}>
-        <span className={styles.numero}>{pct}%</span>
+        <span className={styles.numero}>{Math.round(valor)}%</span>
         <span className={styles.etiqueta}>esta semana</span>
       </div>
     </div>

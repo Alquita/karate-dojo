@@ -7,7 +7,9 @@ import StudentDetail from "./StudentDetail";
 import AttendanceSheet from "./AttendanceSheet";
 import StudentAttendance from "./StudentAttendance";
 import AnimatedContent from "../ui/AnimatedContent";
-import FadeContent from "../ui/FadeContent";
+import BlurText from "../ui/BlurText";
+import AnimatedCounter from "../ui/AnimatedCounter";
+import { GRUPOS } from "../../data/categories";
 import styles from "./StudentsList.module.css";
 
 export default function StudentsList() {
@@ -24,6 +26,18 @@ export default function StudentsList() {
     cargar();
   }, []);
 
+  useEffect(() => {
+    if (!mostrarForm) return;
+    const onKey = (e) => { if (e.key === "Escape") setMostrarForm(false); };
+    window.addEventListener("keydown", onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prev;
+    };
+  }, [mostrarForm]);
+
   async function cargar() {
     setCargando(true);
     const data = await getStudents();
@@ -38,6 +52,10 @@ export default function StudentsList() {
   });
 
   const seleccionado = students.find((s) => s.id === seleccionadoId) || null;
+
+  const gruposConocidos = GRUPOS.filter((g) => filtrados.some((s) => s.grupo === g));
+  const gruposExtra = [...new Set(filtrados.map((s) => s.grupo).filter((g) => !GRUPOS.includes(g)))];
+  const gruposOrdenados = [...gruposConocidos, ...gruposExtra];
 
   async function handleBaja(id) {
     await removeStudent(id);
@@ -74,11 +92,13 @@ export default function StudentsList() {
     <div className={styles.students}>
       <div className={styles.header}>
         <div>
-          <p className="eyebrow">Clientes</p>
-          <h1 className="title">Alumnos</h1>
+          <p className="eyebrow">Dojo</p>
+          <BlurText key="alumnos" className="title" text="Alumnos" animateBy="letters" />
         </div>
         <div className={styles.headerRight}>
-          <p className={styles.contador}>{filtrados.length} de {students.length}</p>
+          <p className={styles.contador}>
+            <AnimatedCounter value={filtrados.length} /> de {students.length}
+          </p>
           <button
             className="btn btn--primary"
             onClick={() => setVista("planilla-grupal")}
@@ -97,9 +117,11 @@ export default function StudentsList() {
       />
 
       {mostrarForm && (
-        <FadeContent>
-          <NuevoAlumnoForm onCancelar={() => setMostrarForm(false)} onGuardar={handleNuevoAlumno} />
-        </FadeContent>
+        <div className={styles.modalOverlay} onClick={() => setMostrarForm(false)}>
+          <div className={styles.modalPanel} onClick={(e) => e.stopPropagation()}>
+            <NuevoAlumnoForm onCancelar={() => setMostrarForm(false)} onGuardar={handleNuevoAlumno} />
+          </div>
+        </div>
       )}
 
       <div className={styles.body}>
@@ -108,14 +130,30 @@ export default function StudentsList() {
           {!cargando && filtrados.length === 0 && (
             <p className={styles.vacio}>Ningun alumno coincide con este filtro.</p>
           )}
-          {filtrados.map((alumno, i) => (
-            <AnimatedContent key={alumno.id} distance={25} delay={i * 0.04}>
-              <StudentCard
-                alumno={alumno}
-                onClick={() => setSeleccionadoId(alumno.id)}
-              />
-            </AnimatedContent>
-          ))}
+          {!cargando && gruposOrdenados.map((grupo, gi) => {
+            const delGrupo = filtrados.filter((s) => s.grupo === grupo);
+            return (
+              <section key={grupo} className={styles.grupo}>
+                <div
+                  className={styles.grupoBanda}
+                  data-variant={gi % 2 === 0 ? "rojo" : "negro"}
+                >
+                  <span className={styles.grupoNombre}>{grupo || "Sin grupo"}</span>
+                  <span className={styles.grupoContador}>{delGrupo.length}</span>
+                </div>
+                <div className={styles.grupoCards}>
+                  {delGrupo.map((alumno, i) => (
+                    <AnimatedContent key={alumno.id} distance={25} delay={i * 0.04}>
+                      <StudentCard
+                        alumno={alumno}
+                        onClick={() => setSeleccionadoId(alumno.id)}
+                      />
+                    </AnimatedContent>
+                  ))}
+                </div>
+              </section>
+            );
+          })}
         </div>
 
         <div className={styles.detalle}>

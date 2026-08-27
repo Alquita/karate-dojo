@@ -1,18 +1,27 @@
 .card {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 6px;
-  padding: 16px 18px;
+  padding: 16px 18px 16px 22px;
   background: var(--glass-bg);
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
   border: 1px solid var(--glass-border);
-  border-left: 3px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow-sm);
   text-align: left;
+  overflow: hidden;
   transition: transform 0.3s var(--ease-bounce), box-shadow 0.3s;
   width: 100%;
+}
+
+.belt {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 6px;
 }
 
 .card:hover {

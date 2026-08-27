@@ -1,4 +1,126 @@
+.wrap {
+  position: relative;
+  min-height: calc(100dvh - 160px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  padding: 24px 0;
+}
+
+.wrap::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(180deg, rgba(14, 14, 15, 0.82), rgba(14, 14, 15, 0.94)),
+    radial-gradient(circle at 70% 20%, rgba(211, 32, 42, 0.16), transparent 55%),
+    url("/dojo.jpg") center 20% / cover no-repeat;
+}
+
+:global(.light) .wrap::before {
+  background:
+    linear-gradient(180deg, rgba(250, 248, 244, 0.72), rgba(250, 248, 244, 0.88)),
+    radial-gradient(circle at 70% 20%, rgba(211, 32, 42, 0.12), transparent 55%),
+    url("/dojo.jpg") center 20% / cover no-repeat;
+}
+
+/* ── Loader ─────────────────────────────────────────────── */
+
+.loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 24px 0 8px;
+}
+
+.loaderText {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.progress {
+  width: 100%;
+  max-width: 260px;
+  height: 6px;
+  border-radius: var(--radius-pill);
+  background: var(--border);
+  overflow: hidden;
+}
+
+.progressFill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--indigo), var(--indigo-light));
+  animation: progressFill 1.05s var(--ease-smooth) forwards;
+}
+
+@keyframes progressFill {
+  from { width: 4%; }
+  to { width: 100%; }
+}
+
+/* ── Bienvenida ─────────────────────────────────────────── */
+
+.bienvenida {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+  padding: 4px 0 20px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.bienvenidaCheck {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  color: #fff;
+  background: linear-gradient(135deg, var(--indigo), var(--indigo-light));
+  box-shadow: var(--shadow-indigo);
+  animation: bienvenidaPop 0.5s var(--ease-bounce) both;
+}
+
+.bienvenidaCheck svg {
+  width: 26px;
+  height: 26px;
+}
+
+@keyframes bienvenidaPop {
+  from { opacity: 0; transform: scale(0.3); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.bienvenidaTexto {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--indigo);
+}
+
+.bienvenidaSub {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
 .panel {
+  width: 100%;
   max-width: 480px;
   margin: 0 auto;
   padding: 36px 28px;
@@ -22,20 +144,6 @@
 
 .title {
   margin: 0 0 24px;
-}
-
-.gradient-text {
-  background-image: linear-gradient(135deg, var(--indigo), var(--amber), var(--moss));
-  background-size: 200% 100%;
-  background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
-  animation: gradientShift 6s ease-in-out infinite;
-}
-
-@keyframes gradientShift {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
 }
 
 .form {
@@ -64,8 +172,9 @@
 /* ── Ficha (post check-in) ──────────────────────────────── */
 
 .ficha {
+  width: 100%;
   max-width: 640px;
-  margin: 28px auto 0;
+  margin: 0 auto;
   padding: 28px;
   background: var(--glass-bg);
   backdrop-filter: var(--glass-blur);

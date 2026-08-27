@@ -7,7 +7,9 @@ import {
   primerDiaDelMes,
   toISODate,
   formatoCorto,
+  edadDesde,
 } from "../../utils/dates";
+import { nombreCompleto } from "../../utils/format";
 import { colorParaCinta } from "../../data/categories";
 import AnimatedContent from "../ui/AnimatedContent";
 import styles from "./StudentAttendance.module.css";
@@ -76,7 +78,7 @@ export default function StudentAttendance({ alumno, onVolver }) {
     <div className={styles.sheet}>
       <div className={styles.header}>
         <button className="btn btn--secondary" onClick={onVolver}>← Volver</button>
-        <h1 className={styles.title}>Planilla de {alumno.nombre}</h1>
+        <h1 className={styles.title}>Planilla de {nombreCompleto(alumno)}</h1>
       </div>
 
       <AnimatedContent distance={16} delay={0.05}>
@@ -87,7 +89,7 @@ export default function StudentAttendance({ alumno, onVolver }) {
           <div className={styles.studentMeta}>
             <span>{alumno.grupo}</span>
             <span className={styles.separator}>·</span>
-            <span>{alumno.edad} años</span>
+            <span>{edadDesde(alumno.fechaNacimiento)} años</span>
             <span className={styles.separator}>·</span>
             <span>{alumno.totalAsistencias} asistencias totales</span>
           </div>

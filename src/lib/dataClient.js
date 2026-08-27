@@ -7,7 +7,7 @@ import { toISODate } from "../utils/dates";
 // que ningún componente tiene que cambiar.
 let students = mockStudents.map((s) => ({ ...s }));
 
-function delay(value, ms = 120) {
+function delay(value, ms = 420) {
   return new Promise((resolve) => setTimeout(() => resolve(value), ms));
 }
 
@@ -39,13 +39,23 @@ export async function registerAttendance(dni) {
 export async function addStudent(datos) {
   const nuevo = {
     id: crypto.randomUUID(),
-    edad: "",
-    contacto: "",
+    nombre: "",
+    apellido: "",
+    fechaNacimiento: "",
+    sexo: "",
+    ocupacion: "",
+    grupo: "",
+    cinta: "Blanco",
+    email: "",
+    direccion: "",
+    telefono: "",
+    fechaIngreso: "",
     metaSemanal: 3,
     totalAsistencias: 0,
     historial: [],
     proximoExamen: null,
     ultimoExamen: null,
+    observaciones: "",
     notas: [],
     ...datos,
   };

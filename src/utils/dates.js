@@ -71,6 +71,17 @@ function semanasDelMes(anio, mes) {
   return Math.ceil(totalSlots / 7);
 }
 
+function edadDesde(fechaNacimiento) {
+  if (!fechaNacimiento) return "";
+  const nac = new Date(fechaNacimiento);
+  if (Number.isNaN(nac.getTime())) return "";
+  const hoy = new Date();
+  let edad = hoy.getFullYear() - nac.getFullYear();
+  const m = hoy.getMonth() - nac.getMonth();
+  if (m < 0 || (m === 0 && hoy.getDate() < nac.getDate())) edad--;
+  return edad;
+}
+
 function horasDesde(fechaISO) {
   const ahora = new Date();
   const fecha = new Date(fechaISO);
@@ -88,6 +99,7 @@ export {
   formatoCorto,
   formatoLargo,
   esMismoDia,
+  edadDesde,
   diasDelMes,
   primerDiaDelMes,
   semanaActualReferencia,

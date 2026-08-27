@@ -27,16 +27,15 @@
   min-width: 0;
 }
 
-.brand__mark {
-  width: 36px;
-  height: 36px;
-  color: var(--indigo);
+.brand__logo {
+  height: 42px;
+  width: auto;
   flex-shrink: 0;
   transition: transform 0.4s var(--ease-bounce);
 }
 
-.brand:hover .brand__mark {
-  transform: rotate(15deg) scale(1.1);
+.brand:hover .brand__logo {
+  transform: scale(1.06);
 }
 
 .brand__title {

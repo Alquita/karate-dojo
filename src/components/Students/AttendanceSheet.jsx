@@ -7,6 +7,7 @@ import {
   toISODate,
   formatoCorto,
 } from "../../utils/dates";
+import { nombreCompleto } from "../../utils/format";
 import AnimatedContent from "../ui/AnimatedContent";
 import styles from "./AttendanceSheet.module.css";
 
@@ -22,7 +23,7 @@ export default function AttendanceSheet({ students, onVolver }) {
   const filtrados = useMemo(() => {
     const texto = busqueda.toLowerCase().trim();
     return students.filter((s) => {
-      if (texto && !s.nombre.toLowerCase().includes(texto)) return false;
+      if (texto && !nombreCompleto(s).toLowerCase().includes(texto)) return false;
       return true;
     });
   }, [students, busqueda]);
@@ -157,7 +158,7 @@ export default function AttendanceSheet({ students, onVolver }) {
                 <tr key={alumno.id} className={styles.row}>
                   <td className={`${styles.td} ${styles["td--sticky"]} ${styles["td--num"]}`}>{i + 1}</td>
                   <td className={`${styles.td} ${styles["td--sticky"]} ${styles["td--name"]}`}>
-                    {alumno.nombre}
+                    {nombreCompleto(alumno)}
                   </td>
                   {diasColumnas.map((d) => {
                     const attended = asistio(alumno, d);

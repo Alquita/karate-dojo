@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { colorParaCinta } from "../../data/categories";
-import { formatoCorto } from "../../utils/dates";
+import { formatoCorto, formatoLargo, edadDesde } from "../../utils/dates";
+import { nombreCompleto } from "../../utils/format";
 import FadeContent from "../ui/FadeContent";
 import styles from "./StudentDetail.module.css";
 
@@ -15,7 +16,7 @@ export default function StudentDetail({ alumno, onBaja, onNota, onVerPlanilla })
         <div className={styles.header}>
           <div>
             <p className={styles.grupo}>{alumno.grupo}</p>
-            <h2 className={styles.nombre}>{alumno.nombre}</h2>
+            <h2 className={styles.nombre}>{nombreCompleto(alumno)}</h2>
             <span
               className="badge"
               style={{ background: color.bg, color: color.fg, borderColor: color.border }}
@@ -44,8 +45,14 @@ export default function StudentDetail({ alumno, onBaja, onNota, onVerPlanilla })
 
         <dl className={styles.lista}>
           <Fila label="Documento" valor={alumno.dni} />
-          <Fila label="Edad" valor={alumno.edad ? `${alumno.edad} años` : "-"} />
-          <Fila label="Contacto" valor={alumno.contacto || "-"} />
+          <Fila label="Fecha de nacimiento" valor={fechaOGuion(alumno.fechaNacimiento)} />
+          <Fila label="Edad" valor={edadDesde(alumno.fechaNacimiento) !== "" ? `${edadDesde(alumno.fechaNacimiento)} años` : "-"} />
+          <Fila label="Sexo" valor={alumno.sexo || "-"} />
+          <Fila label="Ocupacion / profesion" valor={alumno.ocupacion || "-"} />
+          <Fila label="Correo electronico" valor={alumno.email || "-"} />
+          <Fila label="Telefono" valor={alumno.telefono || alumno.contacto || "-"} />
+          <Fila label="Direccion" valor={alumno.direccion || "-"} />
+          <Fila label="Ingreso al dojo" valor={fechaOGuion(alumno.fechaIngreso || alumno.ingreso)} />
           <Fila label="Asistencias totales" valor={alumno.totalAsistencias} />
           <Fila
             label="Proximo examen"
@@ -56,6 +63,13 @@ export default function StudentDetail({ alumno, onBaja, onNota, onVerPlanilla })
             valor={alumno.ultimoExamen ? formatoCorto(alumno.ultimoExamen) : "Todavia no rindio"}
           />
         </dl>
+
+        {alumno.observaciones && (
+          <div className={styles.observaciones}>
+            <p className="section-label">Observaciones generales / medicas</p>
+            <p className={styles.observacionesTexto}>{alumno.observaciones}</p>
+          </div>
+        )}
 
         <button className={`btn btn--primary ${styles.planillaBtn}`} onClick={onVerPlanilla}>
           Ver planilla de asistencia
@@ -88,6 +102,11 @@ export default function StudentDetail({ alumno, onBaja, onNota, onVerPlanilla })
       </div>
     </FadeContent>
   );
+}
+
+function fechaOGuion(iso) {
+  if (!iso) return "-";
+  return formatoLargo(iso);
 }
 
 function Fila({ label, valor }) {

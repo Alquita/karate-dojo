@@ -12,7 +12,6 @@
 
 .trazo {
   stroke: var(--indigo);
-  transition: stroke-dashoffset 0.9s var(--ease-smooth);
 }
 
 .centro {

@@ -21,15 +21,12 @@ export default function Nav({ active, onChange, isDark, onToggleTheme }) {
   return (
     <nav className={`${styles.nav} ${scrolled ? styles["nav--scrolled"] : ""}`}>
       <div className={styles.brand}>
-        <svg className={styles.brand__mark} viewBox="0 0 40 40" aria-hidden="true">
-          <path
-            d="M20 4 C 29.4 4 37 11.4 37 20.6 C 37 29.6 29.6 37 20.4 37 C 12 37 5 30.6 4.2 22.5"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="3.4"
-            strokeLinecap="round"
-          />
-        </svg>
+        <img
+          className={styles.brand__logo}
+          src="/logo.png"
+          alt="KarateDoMiyazato"
+          onError={(e) => { e.currentTarget.style.display = "none"; }}
+        />
         <div>
           <p className={styles.brand__title}>KarateDoMiyazato</p>
           <p className={styles.brand__sub}>Panel del profesor</p>

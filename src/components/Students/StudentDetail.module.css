@@ -81,6 +81,24 @@
   margin-bottom: 20px;
 }
 
+.observaciones {
+  margin-bottom: 20px;
+}
+
+.observaciones :global(.section-label) {
+  margin-bottom: 8px;
+}
+
+.observacionesTexto {
+  font-size: 13px;
+  line-height: 1.5;
+  padding: 10px 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--indigo);
+  border-radius: var(--radius-sm);
+}
+
 .notas {
   border-top: 1px solid var(--border);
   padding-top: 16px;

@@ -1,0 +1,16 @@
+.spinner {
+  display: inline-block;
+  line-height: 0;
+}
+
+.spinner svg {
+  animation: spin 0.9s linear infinite;
+}
+
+.track {
+  stroke: var(--border);
+}
+
+.arc {
+  stroke: var(--indigo);
+}
