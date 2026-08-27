@@ -28,14 +28,23 @@
 }
 
 .brand__logo {
-  height: 42px;
+  height: 44px;
   width: auto;
   flex-shrink: 0;
-  transition: transform 0.4s var(--ease-bounce);
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.5))
+          drop-shadow(0 0 1px rgba(0, 0, 0, 0.35));
+  transition: transform 0.4s var(--ease-bounce), filter 0.3s;
 }
 
 .brand:hover .brand__logo {
   transform: scale(1.06);
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.55))
+          drop-shadow(0 0 1px rgba(0, 0, 0, 0.4));
+}
+
+:global(.light) .brand__logo {
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.22))
+          drop-shadow(0 0 1px rgba(0, 0, 0, 0.15));
 }
 
 .brand__title {
