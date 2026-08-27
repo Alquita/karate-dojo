@@ -5,7 +5,7 @@ import { nombreCompleto } from "../../utils/format";
 import FadeContent from "../ui/FadeContent";
 import styles from "./StudentDetail.module.css";
 
-export default function StudentDetail({ alumno, onBaja, onNota, onVerPlanilla }) {
+export default function StudentDetail({ alumno, onBaja, onNota, onEditar, onVerPlanilla }) {
   const [nota, setNota] = useState("");
   const [confirmarBaja, setConfirmarBaja] = useState(false);
   const color = colorParaCinta(alumno.cinta);
@@ -24,9 +24,14 @@ export default function StudentDetail({ alumno, onBaja, onNota, onVerPlanilla })
               {alumno.cinta}
             </span>
           </div>
-          <button className="btn btn--danger-ghost" onClick={() => setConfirmarBaja(true)}>
-            Dar de baja
-          </button>
+          <div className={styles.acciones}>
+            <button className="btn btn--secondary" onClick={onEditar}>
+              Editar información
+            </button>
+            <button className="btn btn--danger-ghost" onClick={() => setConfirmarBaja(true)}>
+              Dar de baja
+            </button>
+          </div>
         </div>
 
         {confirmarBaja && (

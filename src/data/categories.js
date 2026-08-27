@@ -2,14 +2,15 @@
 // Los nombres y el orden se pueden ajustar cuando Julio confirme el criterio exacto
 // de progresión de su federación (Okinawa Shorin-Ryu Shidokan).
 
+// Orden real del dojo, de 7º kyu (menor) a 1º kyu (mayor):
 export const KYU_BELTS = [
-  "Blanco",
-  "Amarillo",
-  "Naranja",
-  "Celeste",
-  "Verde",
-  "Azul",
-  "Marrón",
+  "Blanco",   // 7º kyu
+  "Celeste",  // 6º kyu
+  "Amarillo", // 5º kyu
+  "Naranja",  // 4º kyu
+  "Verde",    // 3º kyu
+  "Azul",     // 2º kyu
+  "Marrón",   // 1º kyu
 ];
 
 export const DAN_LEVELS = [
@@ -20,6 +21,7 @@ export const DAN_LEVELS = [
   "Quinto Dan",
   "Séptimo Dan",
   "Noveno Dan",
+  "Primer Dan Cadete",
   "Primer Dan Juvenil",
   "Segundo Dan Juvenil",
 ];

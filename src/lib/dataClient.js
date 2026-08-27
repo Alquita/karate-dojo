@@ -1,98 +1,15 @@
 import { mockStudents } from "../data/mockStudents";
 import { toISODate } from "../utils/dates";
+import { supabase, HAY_SUPABASE } from "./supabaseClient";
+
+// Única capa de datos. Todos los componentes la usan con estas 7 funciones async.
+// Con Supabase configurado (.env.local) pega contra la base real; si no, usa una
+// copia mock en memoria (modo demo). La firma y la forma de respuesta son iguales
+// en los dos casos, así que ningún componente cambia.
 
 // ─────────────────────────────────────────────────────────────────────────
-// MODO PRUEBA (activo). Datos falsos en memoria: lo que cargues se pierde
-// al recargar la página. No toca ninguna base de datos.
-//
-// La conexión real a Supabase está lista pero comentada al final de este
-// archivo. Para activarla ver las instrucciones en supabaseClient.js.
+// Supabase
 // ─────────────────────────────────────────────────────────────────────────
-
-let students = mockStudents.map((s) => ({ ...s }));
-
-function delay(value, ms = 420) {
-  return new Promise((resolve) => setTimeout(() => resolve(value), ms));
-}
-
-export async function getStudents() {
-  return delay([...students]);
-}
-
-export async function findByDni(dni) {
-  const alumno = students.find((s) => s.dni === dni.trim());
-  return delay(alumno ? { ...alumno } : null);
-}
-
-export async function registerAttendance(dni) {
-  const hoy = toISODate(new Date());
-  const idx = students.findIndex((s) => s.dni === dni.trim());
-  if (idx === -1) return delay(null);
-
-  const alumno = students[idx];
-  const yaRegistrado = alumno.historial.includes(hoy);
-  const historial = yaRegistrado ? alumno.historial : [hoy, ...alumno.historial];
-  const totalAsistencias = yaRegistrado
-    ? alumno.totalAsistencias
-    : alumno.totalAsistencias + 1;
-
-  students[idx] = { ...alumno, historial, totalAsistencias };
-  return delay({ ...students[idx], yaRegistrado });
-}
-
-export async function addStudent(datos) {
-  const nuevo = {
-    id: crypto.randomUUID(),
-    nombre: "",
-    apellido: "",
-    fechaNacimiento: "",
-    sexo: "",
-    ocupacion: "",
-    grupo: "",
-    cinta: "Blanco",
-    email: "",
-    direccion: "",
-    telefono: "",
-    fechaIngreso: "",
-    metaSemanal: 3,
-    totalAsistencias: 0,
-    historial: [],
-    proximoExamen: null,
-    ultimoExamen: null,
-    observaciones: "",
-    notas: [],
-    ...datos,
-  };
-  students = [...students, nuevo];
-  return delay({ ...nuevo });
-}
-
-export async function removeStudent(id) {
-  students = students.filter((s) => s.id !== id);
-  return delay(true);
-}
-
-export async function addNota(id, texto) {
-  const idx = students.findIndex((s) => s.id === id);
-  if (idx === -1) return delay(null);
-  students[idx] = { ...students[idx], notas: [...students[idx].notas, texto] };
-  return delay({ ...students[idx] });
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════
-   CONEXIÓN SUPABASE — LISTA PERO DESACTIVADA.
-
-   Para activar cuando lleguen los datos reales de Julio:
-     1. Crear .env.local con VITE_SUPABASE_URL y VITE_SUPABASE_ANON_KEY
-        (ver supabaseClient.js) y descomentar el createClient de ahí.
-     2. Borrar TODO el bloque MODO PRUEBA de arriba (desde `let students` hasta
-        la función addNota).
-     3. Descomentar todo este bloque.
-   Los componentes no cambian: mismas 6 funciones, misma forma de respuesta.
-   Esquema de la base: ver docs/esquema.sql (o el SQL pegado en Supabase).
-   ═══════════════════════════════════════════════════════════════════════════
-
-import { supabase } from "./supabaseClient";
 
 const SELECT_ALUMNO = "*, asistencias(fecha), notas(id, texto, creado_en)";
 
@@ -129,7 +46,7 @@ function mapearAlumno(row, resumen) {
   };
 }
 
-function alumnoParaInsert(datos) {
+function alumnoParaGuardar(datos) {
   return {
     documento: (datos.dni || "").trim(),
     nombre: (datos.nombre || "").trim(),
@@ -154,76 +71,182 @@ async function resumenPorId() {
   return Object.fromEntries((data || []).map((r) => [r.alumno_id, r]));
 }
 
-export async function getStudents() {
-  const [{ data: rows, error }, resumen] = await Promise.all([
-    supabase.from("alumnos").select(SELECT_ALUMNO).eq("activo", true),
-    resumenPorId(),
-  ]);
-  if (error) throw error;
-  return (rows || [])
-    .map((r) => mapearAlumno(r, resumen[r.id]))
-    .sort((a, b) =>
-      `${a.apellido} ${a.nombre}`.localeCompare(`${b.apellido} ${b.nombre}`)
-    );
-}
-
-export async function findByDni(dni) {
-  const { data, error } = await supabase
-    .from("alumnos")
-    .select(SELECT_ALUMNO)
-    .eq("documento", dni.trim())
-    .eq("activo", true)
-    .maybeSingle();
-  if (error) throw error;
-  if (!data) return null;
-  const resumen = await resumenPorId();
-  return mapearAlumno(data, resumen[data.id]);
-}
-
-export async function registerAttendance(dni) {
-  const alumno = await findByDni(dni);
-  if (!alumno) return null;
-
-  const hoy = toISODate(new Date());
-  const yaRegistrado = alumno.historial.includes(hoy);
-
-  if (!yaRegistrado) {
-    const { error } = await supabase
-      .from("asistencias")
-      .upsert(
-        { alumno_id: alumno.id, fecha: hoy },
-        { onConflict: "alumno_id,fecha", ignoreDuplicates: true }
-      );
+const sb = {
+  async getStudents() {
+    const [{ data: rows, error }, resumen] = await Promise.all([
+      supabase.from("alumnos").select(SELECT_ALUMNO).eq("activo", true),
+      resumenPorId(),
+    ]);
     if (error) throw error;
-  }
+    return (rows || [])
+      .map((r) => mapearAlumno(r, resumen[r.id]))
+      .sort((a, b) =>
+        `${a.apellido} ${a.nombre}`.localeCompare(`${b.apellido} ${b.nombre}`)
+      );
+  },
 
-  const actualizado = await findByDni(dni);
-  return { ...actualizado, yaRegistrado };
+  async findByDni(dni) {
+    const { data, error } = await supabase
+      .from("alumnos")
+      .select(SELECT_ALUMNO)
+      .eq("documento", dni.trim())
+      .eq("activo", true)
+      .maybeSingle();
+    if (error) throw error;
+    if (!data) return null;
+    const resumen = await resumenPorId();
+    return mapearAlumno(data, resumen[data.id]);
+  },
+
+  async registerAttendance(dni) {
+    const alumno = await sb.findByDni(dni);
+    if (!alumno) return null;
+
+    const hoy = toISODate(new Date());
+    const yaRegistrado = alumno.historial.includes(hoy);
+
+    if (!yaRegistrado) {
+      const { error } = await supabase
+        .from("asistencias")
+        .upsert(
+          { alumno_id: alumno.id, fecha: hoy },
+          { onConflict: "alumno_id,fecha", ignoreDuplicates: true }
+        );
+      if (error) throw error;
+    }
+
+    const actualizado = await sb.findByDni(dni);
+    return { ...actualizado, yaRegistrado };
+  },
+
+  async addStudent(datos) {
+    const { data, error } = await supabase
+      .from("alumnos")
+      .insert(alumnoParaGuardar(datos))
+      .select(SELECT_ALUMNO)
+      .single();
+    if (error) throw error;
+    return mapearAlumno(data, null);
+  },
+
+  async updateStudent(id, datos) {
+    const { data, error } = await supabase
+      .from("alumnos")
+      .update(alumnoParaGuardar(datos))
+      .eq("id", id)
+      .select(SELECT_ALUMNO)
+      .single();
+    if (error) throw error;
+    return mapearAlumno(data, null);
+  },
+
+  async removeStudent(id) {
+    const { error } = await supabase
+      .from("alumnos")
+      .update({ activo: false })
+      .eq("id", id);
+    if (error) throw error;
+    return true;
+  },
+
+  async addNota(id, texto) {
+    const { error } = await supabase.from("notas").insert({ alumno_id: id, texto });
+    if (error) throw error;
+    return true;
+  },
+};
+
+// ─────────────────────────────────────────────────────────────────────────
+// Mock en memoria (modo demo, sin Supabase configurado)
+// ─────────────────────────────────────────────────────────────────────────
+
+let students = mockStudents.map((s) => ({ ...s }));
+
+function delay(value, ms = 420) {
+  return new Promise((resolve) => setTimeout(() => resolve(value), ms));
 }
 
-export async function addStudent(datos) {
-  const { data, error } = await supabase
-    .from("alumnos")
-    .insert(alumnoParaInsert(datos))
-    .select(SELECT_ALUMNO)
-    .single();
-  if (error) throw error;
-  return mapearAlumno(data, null);
-}
+const mock = {
+  async getStudents() {
+    return delay([...students]);
+  },
 
-export async function removeStudent(id) {
-  const { error } = await supabase
-    .from("alumnos")
-    .update({ activo: false })
-    .eq("id", id);
-  if (error) throw error;
-  return true;
-}
+  async findByDni(dni) {
+    const alumno = students.find((s) => s.dni === dni.trim());
+    return delay(alumno ? { ...alumno } : null);
+  },
 
-export async function addNota(id, texto) {
-  const { error } = await supabase.from("notas").insert({ alumno_id: id, texto });
-  if (error) throw error;
-  return true;
-}
+  async registerAttendance(dni) {
+    const hoy = toISODate(new Date());
+    const idx = students.findIndex((s) => s.dni === dni.trim());
+    if (idx === -1) return delay(null);
 
-═══════════════════════════════════════════════════════════════════════════ */
+    const alumno = students[idx];
+    const yaRegistrado = alumno.historial.includes(hoy);
+    const historial = yaRegistrado ? alumno.historial : [hoy, ...alumno.historial];
+    const totalAsistencias = yaRegistrado
+      ? alumno.totalAsistencias
+      : alumno.totalAsistencias + 1;
+
+    students[idx] = { ...alumno, historial, totalAsistencias };
+    return delay({ ...students[idx], yaRegistrado });
+  },
+
+  async addStudent(datos) {
+    const nuevo = {
+      id: crypto.randomUUID(),
+      nombre: "",
+      apellido: "",
+      fechaNacimiento: "",
+      sexo: "",
+      ocupacion: "",
+      grupo: "",
+      cinta: "Blanco",
+      email: "",
+      direccion: "",
+      telefono: "",
+      fechaIngreso: "",
+      metaSemanal: 3,
+      totalAsistencias: 0,
+      historial: [],
+      proximoExamen: null,
+      ultimoExamen: null,
+      observaciones: "",
+      notas: [],
+      ...datos,
+    };
+    students = [...students, nuevo];
+    return delay({ ...nuevo });
+  },
+
+  async updateStudent(id, datos) {
+    const idx = students.findIndex((s) => s.id === id);
+    if (idx === -1) return delay(null);
+    students[idx] = { ...students[idx], ...datos };
+    return delay({ ...students[idx] });
+  },
+
+  async removeStudent(id) {
+    students = students.filter((s) => s.id !== id);
+    return delay(true);
+  },
+
+  async addNota(id, texto) {
+    const idx = students.findIndex((s) => s.id === id);
+    if (idx === -1) return delay(null);
+    students[idx] = { ...students[idx], notas: [...students[idx].notas, texto] };
+    return delay({ ...students[idx] });
+  },
+};
+
+// ─────────────────────────────────────────────────────────────────────────
+
+const impl = HAY_SUPABASE ? sb : mock;
+
+export const getStudents = (...a) => impl.getStudents(...a);
+export const findByDni = (...a) => impl.findByDni(...a);
+export const registerAttendance = (...a) => impl.registerAttendance(...a);
+export const addStudent = (...a) => impl.addStudent(...a);
+export const updateStudent = (...a) => impl.updateStudent(...a);
+export const removeStudent = (...a) => impl.removeStudent(...a);
+export const addNota = (...a) => impl.addNota(...a);

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getStudents, addStudent, removeStudent, addNota } from "../../lib/dataClient";
+import { getStudents, addStudent, updateStudent, removeStudent, addNota } from "../../lib/dataClient";
 import Filters from "./Filters";
 import StudentCard from "./StudentCard";
 import NuevoAlumnoForm from "./NuevoAlumnoForm";
@@ -18,7 +18,7 @@ export default function StudentsList() {
   const [filtroCinta, setFiltroCinta] = useState("");
   const [filtroGrupo, setFiltroGrupo] = useState("");
   const [seleccionadoId, setSeleccionadoId] = useState(null);
-  const [mostrarForm, setMostrarForm] = useState(false);
+  const [formMode, setFormMode] = useState(null); // null | "nuevo" | "editar"
   const [vista, setVista] = useState("lista");
   const [alumnoPlanilla, setAlumnoPlanilla] = useState(null);
 
@@ -27,8 +27,8 @@ export default function StudentsList() {
   }, []);
 
   useEffect(() => {
-    if (!mostrarForm) return;
-    const onKey = (e) => { if (e.key === "Escape") setMostrarForm(false); };
+    if (!formMode) return;
+    const onKey = (e) => { if (e.key === "Escape") setFormMode(null); };
     window.addEventListener("keydown", onKey);
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
@@ -36,7 +36,7 @@ export default function StudentsList() {
       window.removeEventListener("keydown", onKey);
       document.body.style.overflow = prev;
     };
-  }, [mostrarForm]);
+  }, [formMode]);
 
   async function cargar() {
     setCargando(true);
@@ -71,7 +71,13 @@ export default function StudentsList() {
 
   async function handleNuevoAlumno(datos) {
     await addStudent(datos);
-    setMostrarForm(false);
+    setFormMode(null);
+    cargar();
+  }
+
+  async function handleEditar(datos) {
+    await updateStudent(seleccionadoId, datos);
+    setFormMode(null);
     cargar();
   }
 
@@ -113,13 +119,17 @@ export default function StudentsList() {
         grupo={filtroGrupo}
         onCintaChange={setFiltroCinta}
         onGrupoChange={setFiltroGrupo}
-        onNuevoAlumno={() => setMostrarForm((v) => !v)}
+        onNuevoAlumno={() => setFormMode((m) => (m === "nuevo" ? null : "nuevo"))}
       />
 
-      {mostrarForm && (
-        <div className={styles.modalOverlay} onClick={() => setMostrarForm(false)}>
+      {formMode && (
+        <div className={styles.modalOverlay} onClick={() => setFormMode(null)}>
           <div className={styles.modalPanel} onClick={(e) => e.stopPropagation()}>
-            <NuevoAlumnoForm onCancelar={() => setMostrarForm(false)} onGuardar={handleNuevoAlumno} />
+            <NuevoAlumnoForm
+              alumno={formMode === "editar" ? seleccionado : undefined}
+              onCancelar={() => setFormMode(null)}
+              onGuardar={formMode === "editar" ? handleEditar : handleNuevoAlumno}
+            />
           </div>
         </div>
       )}
@@ -162,6 +172,7 @@ export default function StudentsList() {
               alumno={seleccionado}
               onBaja={handleBaja}
               onNota={handleNota}
+              onEditar={() => setFormMode("editar")}
               onVerPlanilla={() => {
                 setAlumnoPlanilla(seleccionado);
                 setVista("planilla-individual");

@@ -27,6 +27,29 @@
     url("/dojo.jpg") center 32% / cover no-repeat;
 }
 
+/* ── Barra de auto-retorno del tótem ────────────────────── */
+
+.autoBarra {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  z-index: 50;
+  background: linear-gradient(90deg, var(--indigo), var(--indigo-light));
+  transform-origin: left;
+  animation: autoBarraDrenar linear forwards;
+}
+
+@keyframes autoBarraDrenar {
+  from { transform: scaleX(1); }
+  to { transform: scaleX(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .autoBarra { opacity: 0.5; animation: none; transform: scaleX(1); }
+}
+
 /* ── Loader ─────────────────────────────────────────────── */
 
 .loader {
@@ -117,6 +140,17 @@
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-muted);
+}
+
+/* Ya había fichado hoy: mismo bloque, tono ámbar (avisa sin alarmar) */
+.bienvenida--repetido .bienvenidaCheck {
+  background: linear-gradient(135deg, var(--amber), #b9820f);
+  box-shadow: 0 4px 18px var(--amber-soft);
+}
+
+.bienvenida--repetido .bienvenidaTexto {
+  color: var(--amber);
+  font-size: 24px;
 }
 
 .panel {

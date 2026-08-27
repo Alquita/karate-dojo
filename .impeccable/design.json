@@ -1,0 +1,224 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-27T05:10:00Z",
+  "title": "Design System: KarateDoMiyazato — Panel del profesor",
+  "extensions": {
+    "colorMeta": {
+      "rojo-shidokan": {
+        "role": "primary",
+        "displayName": "Rojo Shidokan",
+        "canonical": "#D3202A",
+        "note": "Light theme overrides to #B3161F. The only expressive color in the system; <=10% of any screen.",
+        "tonalRamp": ["#420A0D", "#6A1015", "#97171E", "#C71E28", "#E13C45", "#EA7178", "#F2A6AB", "#FAE0E1"]
+      },
+      "rojo-shidokan-bright": {
+        "role": "primary",
+        "displayName": "Rojo Shidokan Bright",
+        "canonical": "#E64550",
+        "note": "Top of the 135deg primary gradient / hover. Never a standalone fill.",
+        "tonalRamp": ["#43090D", "#6C0F15", "#99151E", "#CA1B27", "#E43945", "#EC6F78", "#F3A5AA", "#FBE0E1"]
+      },
+      "sumi": {
+        "role": "neutral",
+        "displayName": "Sumi",
+        "canonical": "#171717",
+        "note": "True-black accent. Dark half of an alternating group band.",
+        "tonalRamp": ["#262626", "#3D3D3D", "#575757", "#737373", "#8F8F8F", "#ADADAD", "#CCCCCC", "#EDEDED"]
+      },
+      "ground": {
+        "role": "neutral",
+        "displayName": "Ground / Fondo",
+        "canonical": "#0E0E0F",
+        "note": "The page. Light theme: #FAF8F4 warm rice-paper.",
+        "tonalRamp": ["#252528", "#3B3B3F", "#54545A", "#6F6F77", "#8B8B93", "#ABABB0", "#CACACE", "#EDEDEE"]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Surface / Superficie",
+        "canonical": "#1C1B19",
+        "note": "Recessed layer: fields, dots, data tiles. Light theme: #FFFFFF.",
+        "tonalRamp": ["#282724", "#413E3A", "#5C5852", "#79756C", "#959188", "#B2AFA9", "#CFCDC9", "#EEEDEC"]
+      },
+      "border": {
+        "role": "neutral",
+        "displayName": "Border / Borde",
+        "canonical": "#2E2C28",
+        "note": "Universal 1px stroke. Light theme: #E8E4DA.",
+        "tonalRamp": ["#292724", "#413F39", "#5D5951", "#7B756B", "#979187", "#B3AFA8", "#D0CDC8", "#EEEEEC"]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink / Tinta",
+        "canonical": "#E8E4DA",
+        "note": "Primary text. Light theme: #1C1B19.",
+        "tonalRamp": ["#2F2A1D", "#4B432F", "#6B5F42", "#8E7E58", "#A99A75", "#C0B69A", "#D8D1C0", "#F1EFE9"]
+      },
+      "ink-muted": {
+        "role": "neutral",
+        "displayName": "Ink Muted",
+        "canonical": "#9B978E",
+        "note": "Labels, meta rows, placeholder, disabled. Light theme: #6B6860.",
+        "tonalRamp": ["#292724", "#413F39", "#5C5951", "#7A756C", "#969188", "#B2AFA8", "#CFCDC9", "#EEEEEC"]
+      },
+      "moss": {
+        "role": "secondary",
+        "displayName": "Musgo / Moss",
+        "canonical": "#5AB87F",
+        "note": "'Present' green. Attendance dots only. Light theme: #3D8B5F.",
+        "tonalRamp": ["#173523", "#255638", "#34794F", "#45A069", "#62BB85", "#8DCEA6", "#B8E0C8", "#E6F4EC"]
+      },
+      "amber": {
+        "role": "secondary",
+        "displayName": "Ámbar / Amber",
+        "canonical": "#D9A020",
+        "note": "Exam-timing accent. Countdown / % lines only. Light theme: #C8890A.",
+        "tonalRamp": ["#43310A", "#6B4F10", "#976F16", "#C8931D", "#E2AF3B", "#EAC571", "#F2DBA6", "#FAF2E0"]
+      },
+      "danger": {
+        "role": "neutral",
+        "displayName": "Danger",
+        "canonical": "#E05252",
+        "note": "Errors and destructive actions. Different hue from Rojo Shidokan on purpose. Light theme: #C53030.",
+        "tonalRamp": ["#410C0C", "#681313", "#931A1A", "#C32323", "#DD4141", "#E67575", "#F0A9A9", "#FAE1E1"]
+      }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Screen titles and the welcome banner. Shippori Mincho. Often animated word-by-word." },
+      "headline": { "displayName": "Headline", "purpose": "A student's name on their ficha; 'Planilla de {nombre}'. Shippori Mincho." },
+      "title": { "displayName": "Title", "purpose": "Card names, nav brand, sub-headers. IBM Plex Sans 600." },
+      "body": { "displayName": "Body", "purpose": "Default text, form values, notes. IBM Plex Sans 400 / 1.6." },
+      "label": { "displayName": "Label", "purpose": "Section labels, eyebrows, table headers, ring caption, group-band names. 11-12px, 0.08em, UPPERCASE." },
+      "numeric": { "displayName": "Numeric", "purpose": "Every countable figure: ring %, totals, planilla 'Total' column, animated counters. IBM Plex Mono." }
+    },
+    "shadows": [
+      { "name": "xs", "value": "0 1px 2px rgba(0,0,0,0.15)", "purpose": "Fields, secondary buttons, chips. Light theme: rgba(28,27,25,0.04)." },
+      { "name": "sm", "value": "0 2px 6px rgba(0,0,0,0.20)", "purpose": "Resting cards, filter bar, planilla grid. Light: rgba(28,27,25,0.06)." },
+      { "name": "md", "value": "0 4px 14px rgba(0,0,0,0.28)", "purpose": "Student detail panel, forms. Light: rgba(28,27,25,0.08)." },
+      { "name": "lg", "value": "0 8px 28px rgba(0,0,0,0.32)", "purpose": "Check-in panel, result ficha, card hover. Light: rgba(28,27,25,0.10)." },
+      { "name": "glow-rojo", "value": "0 4px 18px rgba(211,32,42,0.28)", "purpose": "The ONLY colored shadow. Primary button at rest and the active nav/filter pill. Hover expands to 0 6px 24px rgba(211,32,42,0.34). Light: rgba(179,22,31,0.22)." }
+    ],
+    "motion": [
+      { "name": "ease-bounce", "value": "cubic-bezier(0.34, 1.56, 0.64, 1)", "purpose": "Signature ease. Panel/card entrances, dot stagger, welcome check pop, hover lift." },
+      { "name": "ease-smooth", "value": "cubic-bezier(0.4, 0, 0.2, 1)", "purpose": "State transitions on buttons, dots, focus." },
+      { "name": "ease-out-cubic", "value": "1 - pow(1 - t, 3)", "purpose": "JS/rAF curve for the enso ring fill and animated counters (~1.4s)." },
+      { "name": "keyframe-slideUp", "value": "opacity 0>1, translateY(20px)>0", "purpose": "Panels, cards, forms on mount." },
+      { "name": "keyframe-dotEnter", "value": "opacity 0>1, scale(0.4) translateY(6px)>1", "purpose": "Week-timeline dots, staggered 60ms apart." },
+      { "name": "keyframe-fadeIn", "value": "opacity 0>1", "purpose": "Modal overlay." },
+      { "name": "keyframe-spin", "value": "rotate 0>360deg 0.9s linear infinite", "purpose": "Loading spinner." }
+    ],
+    "breakpoints": [
+      { "name": "lg", "value": "900px", "purpose": "Alumnos two-column (1fr/380px) collapses to one column; detail panel de-stickies." },
+      { "name": "sm", "value": "600px", "purpose": "Nav stacks; forms and exam cards go single-column; filter rows wrap." }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one call to action on a screen. Red gradient, colored glow, lifts on hover.",
+      "html": "<button class=\"ds-btn-primary\">Registrar</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 20px; font: 600 14px/1.4 'IBM Plex Sans', system-ui, sans-serif; color: #fff; background: linear-gradient(135deg, var(--indigo, #D3202A), var(--indigo-light, #E64550)); border: none; border-radius: 8px; box-shadow: 0 4px 18px rgba(211,32,42,0.28); cursor: pointer; transition: transform 0.25s cubic-bezier(0.4,0,0.2,1), box-shadow 0.25s cubic-bezier(0.4,0,0.2,1); } .ds-btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(211,32,42,0.34); } .ds-btn-primary:active { transform: translateY(0); } .ds-btn-primary:focus-visible { outline: 2px solid var(--indigo, #D3202A); outline-offset: 2px; } .ds-btn-primary:disabled { opacity: 0.5; pointer-events: none; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Supporting action. The outline catches fire on hover — border and text go red, no fill change.",
+      "html": "<button class=\"ds-btn-secondary\">Cancelar</button>",
+      "css": ".ds-btn-secondary { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 20px; font: 600 14px/1.4 'IBM Plex Sans', system-ui, sans-serif; color: var(--ink, #E8E4DA); background: var(--surface, #1C1B19); border: 1px solid var(--border, #2E2C28); border-radius: 8px; box-shadow: 0 1px 2px rgba(0,0,0,0.15); cursor: pointer; transition: border-color 0.25s, color 0.25s, box-shadow 0.25s; } .ds-btn-secondary:hover { border-color: var(--indigo, #D3202A); color: var(--indigo, #D3202A); box-shadow: 0 2px 6px rgba(0,0,0,0.20); } .ds-btn-secondary:focus-visible { outline: 2px solid var(--indigo, #D3202A); outline-offset: 2px; }"
+    },
+    {
+      "name": "Document Field",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Inset surface field with a red focus bloom. Same signature on selects and today's timeline dot.",
+      "html": "<input class=\"ds-input\" type=\"text\" inputmode=\"numeric\" placeholder=\"Documento\" />",
+      "css": ".ds-input { width: 100%; padding: 10px 14px; font: 400 14px/1.4 'IBM Plex Sans', system-ui, sans-serif; color: var(--ink, #E8E4DA); background: var(--surface, #1C1B19); border: 1px solid var(--border, #2E2C28); border-radius: 8px; box-shadow: 0 1px 2px rgba(0,0,0,0.15); outline: none; transition: border-color 0.2s, box-shadow 0.2s; } .ds-input::placeholder { color: var(--ink-muted, #9B978E); } .ds-input:focus { border-color: var(--indigo, #D3202A); box-shadow: 0 0 0 3px rgba(211,32,42,0.18); }"
+    },
+    {
+      "name": "Belt Badge",
+      "kind": "chip",
+      "refersTo": "badge",
+      "description": "Reads a student's rank at a glance. Functional color from the seven-hue belt system — soft tint fill, saturated border. Shown here: Naranja.",
+      "html": "<span class=\"ds-badge\" style=\"background:#FBD9BC;color:#8A3D0B;border-color:#E5751B\">Naranja</span>",
+      "css": ".ds-badge { display: inline-flex; align-items: center; padding: 4px 12px; font: 600 12px/1.4 'IBM Plex Sans', system-ui, sans-serif; letter-spacing: 0.02em; border: 1px solid; border-radius: 999px; }"
+    },
+    {
+      "name": "Belt Filter Chip",
+      "kind": "chip",
+      "refersTo": "chip-filter",
+      "description": "One chip per belt with a color dot in that belt's true color. Hover moves border to red; active fills solid red.",
+      "html": "<button class=\"ds-chip\"><span class=\"ds-chip-dot\" style=\"background:#2E9E4F\"></span>Verde</button>\n<button class=\"ds-chip ds-chip--active\"><span class=\"ds-chip-dot\" style=\"background:#E5751B\"></span>Naranja</button>",
+      "css": ".ds-chip { display: inline-flex; align-items: center; gap: 6px; padding: 5px 11px; font: 500 12.5px/1.4 'IBM Plex Sans', system-ui, sans-serif; color: var(--ink, #E8E4DA); background: var(--surface, #1C1B19); border: 1px solid var(--border, #2E2C28); border-radius: 999px; cursor: pointer; transition: border-color 0.2s, background 0.2s, color 0.2s; } .ds-chip:hover { border-color: var(--indigo, #D3202A); } .ds-chip--active { color: #fff; background: var(--indigo, #D3202A); border-color: var(--indigo, #D3202A); } .ds-chip-dot { width: 9px; height: 9px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.18); flex-shrink: 0; }"
+    },
+    {
+      "name": "Student Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Signature. Glass card with a 6px belt stripe down the left edge, clipped to the corner. Lifts on hover with a bounce.",
+      "html": "<button class=\"ds-card\"><span class=\"ds-card-belt\" style=\"background:#E5751B\"></span><span class=\"ds-card-top\"><span class=\"ds-card-name\">Lucas Fernandez</span><span class=\"ds-badge ds-badge--sm\" style=\"background:#FBD9BC;color:#8A3D0B;border-color:#E5751B\">Naranja</span></span><span class=\"ds-card-meta\">Mayores · 24 años</span><span class=\"ds-card-stat\">18 asistencias totales</span></button>",
+      "css": ".ds-card { position: relative; display: flex; flex-direction: column; gap: 6px; width: 100%; padding: 16px 18px 16px 22px; text-align: left; background: var(--glass-bg, rgba(28,27,25,0.72)); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid var(--glass-border, rgba(46,44,40,0.6)); border-radius: 14px; box-shadow: 0 2px 6px rgba(0,0,0,0.20); overflow: hidden; cursor: pointer; transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s; } .ds-card:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(0,0,0,0.32); } .ds-card-belt { position: absolute; left: 0; top: 0; bottom: 0; width: 6px; } .ds-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; } .ds-card-name { font: 600 16px/1.3 'Shippori Mincho', Georgia, serif; color: var(--ink, #E8E4DA); } .ds-badge--sm { padding: 2px 10px; font-size: 11px; } .ds-card-meta { font: 400 13px/1.5 'IBM Plex Sans', system-ui, sans-serif; color: var(--ink-muted, #9B978E); } .ds-card-stat { font: 500 12px/1.4 'IBM Plex Mono', ui-monospace, monospace; color: var(--indigo, #D3202A); margin-top: 2px; }"
+    },
+    {
+      "name": "Enso Progress Ring",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "Signature. 128px weekly-goal ring. Track + red arc from 12 o'clock; mono % in the center. On mount, arc and number count up together 0>target over ~1.4s ease-out-cubic (JS-driven; shown here at 68%).",
+      "html": "<div class=\"ds-enso\"><svg width=\"128\" height=\"128\" viewBox=\"0 0 128 128\"><circle class=\"ds-enso-track\" cx=\"64\" cy=\"64\" r=\"59\" fill=\"none\" stroke-width=\"10\"/><circle class=\"ds-enso-arc\" cx=\"64\" cy=\"64\" r=\"59\" fill=\"none\" stroke-width=\"10\" stroke-linecap=\"round\" stroke-dasharray=\"370.7\" stroke-dashoffset=\"118.6\" transform=\"rotate(-90 64 64)\"/></svg><div class=\"ds-enso-center\"><span class=\"ds-enso-num\">68%</span><span class=\"ds-enso-cap\">esta semana</span></div></div>",
+      "css": ".ds-enso { position: relative; display: flex; align-items: center; justify-content: center; width: 128px; height: 128px; } .ds-enso-track { stroke: var(--border, #2E2C28); } .ds-enso-arc { stroke: var(--indigo, #D3202A); transition: stroke-dashoffset 1.4s cubic-bezier(0.22,1,0.36,1); } .ds-enso-center { position: absolute; display: flex; flex-direction: column; align-items: center; gap: 1px; } .ds-enso-num { font: 500 22px/1.1 'IBM Plex Mono', ui-monospace, monospace; color: var(--indigo, #D3202A); } .ds-enso-cap { font: 600 10px/1.4 'IBM Plex Sans', system-ui, sans-serif; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink-muted, #9B978E); }"
+    },
+    {
+      "name": "Group Band",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "Signature. Full-width header above each age-group section in the Alumnos list. Alternates: odd = red gradient + glow; even = sumi gradient. Counter pill on the right.",
+      "html": "<div class=\"ds-band ds-band--rojo\"><span>Mayores</span><span class=\"ds-band-count\">14</span></div>\n<div class=\"ds-band ds-band--sumi\"><span>Juveniles</span><span class=\"ds-band-count\">7</span></div>",
+      "css": ".ds-band { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 14px; border-radius: 8px; font: 700 12px/1.4 'IBM Plex Sans', system-ui, sans-serif; letter-spacing: 0.08em; text-transform: uppercase; color: #fff; margin-bottom: 8px; } .ds-band--rojo { background: linear-gradient(135deg, var(--indigo, #D3202A), var(--indigo-light, #E64550)); box-shadow: 0 4px 18px rgba(211,32,42,0.28); } .ds-band--sumi { background: linear-gradient(135deg, var(--sumi, #171717), #2c2c2c); } .ds-band-count { display: inline-flex; align-items: center; justify-content: center; min-width: 22px; height: 20px; padding: 0 6px; border-radius: 999px; background: rgba(255,255,255,0.22); font-size: 11px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Tinta y Cinturón",
+    "overview": "The dojo has kept attendance on handwritten sheets for years. This system is that ledger rebuilt with the restraint of Japanese ink painting and the discipline of a swept dojo floor: a near-black ground, warm off-white text, a serif (Shippori Mincho) reserved for the few words that carry weight, and monospaced numerals for everything that has to be counted. Onto that quiet surface, one color is allowed to speak — Rojo Shidokan, the red of the federation's seal and of the Sensei's belt in the only photograph in the product. It is never decoration; it marks the thing that matters right now.\n\nThe system is disciplined but not sleepy. Panels are translucent glass that float on the dark ground; the check-in screen sits over a desaturated, blurred photo of the dojo. Every control has a defined edge and a clear corner, and every state change is felt — a ring that fills from zero, a welcome that blurs into place letter by letter, a card that lifts on hover. Motion is how the product shows it heard you.\n\nTwo audiences share it. Julio, the instructor, reads it like a planilla: dense, scannable, exact. A student at the entrance meets it for three seconds on a tablet: one big field, one number, one legible confirmation. The design serves both without compromise — the same tokens, tuned for distance on one screen and for density on the other.",
+    "keyCharacteristics": [
+      "Near-black ground, off-white ink, one red — Rojo Shidokan is the only chromatic voice on any given screen.",
+      "Shippori Mincho serif for weight and ceremony; IBM Plex Sans for the working text; IBM Plex Mono for every number.",
+      "Translucent glass panels with ambient shadow — layered, not flat, never heavy.",
+      "Belt color is functional, not brand: a separate seven-hue system that reads a student's rank at a glance.",
+      "Bounce-eased motion with intent — fills, staggers, welcomes. Nothing decorative, nothing idle.",
+      "Fully theme-flipping: a dark-first :root with a complete warm-paper .light override."
+    ],
+    "rules": [
+      { "name": "The One Red Rule", "body": "Rojo Shidokan is the only expressive color on a screen, and it never covers more than ~10% of it. If two things are red, one of them is wrong. Attendance green and exam amber are state colors, not accents.", "section": "colors" },
+      { "name": "The Belt-Not-Brand Rule", "body": "The seven belt hues never touch chrome, buttons, headings, or backgrounds. They live only on the badge, the card's 6px left stripe, and the filter dot.", "section": "colors" },
+      { "name": "The Warning-Is-Not-a-Verb Rule", "body": "Danger red (#E05252) sits at a different hue from Rojo Shidokan on purpose. Errors and destructive actions use Danger; they must never borrow the primary gradient.", "section": "colors" },
+      { "name": "The Serif Is a Ceremony Rule", "body": "Shippori Mincho appears only on names, titles, and welcomes — never on a paragraph, a value, a button, or a label.", "section": "typography" },
+      { "name": "The Every-Number-Is-Mono Rule", "body": "Any figure a person might compare, add, or track is set in IBM Plex Mono. Counts never sit in the sans stack.", "section": "typography" },
+      { "name": "The Glass-On-Top Rule", "body": "Floating things are translucent glass with a border and an ambient shadow. Recessed things are opaque --surface with a border and at most an xs shadow. Never a glass input; never a solid floating card.", "section": "elevation" },
+      { "name": "The Only-Red-Glows Rule", "body": "Exactly one shadow in the system carries color: glow-rojo, under the primary button and the active pill. Every other shadow is neutral black.", "section": "elevation" },
+      { "name": "The Two-Radii Rule", "body": "14px for panels, 8px for controls, 999px for counts and states. A 10px or 12px corner does not exist here.", "section": "elevation" },
+      { "name": "The No-Naked-Edge Rule", "body": "Every surface has a 1px border. Contrast alone never separates two planes.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do keep Rojo Shidokan under ~10% of any screen and reserve it for the one action or marker that matters now.",
+      "Do set every countable figure in IBM Plex Mono; keep Shippori Mincho for names, titles, and welcomes only.",
+      "Do give floating surfaces glass (--glass-bg + backdrop-filter blur(14px) + --glass-border + ambient shadow) and recessed surfaces opaque --surface with a 1px border.",
+      "Do put a 1px border on every plane.",
+      "Do use the two-radii scale: 14px panels, 8px controls, 999px counts/states.",
+      "Do make state changes felt — fill the ring from zero, stagger the timeline dots, blur the welcome in — on --ease-bounce or a rAF ease-out, and honor prefers-reduced-motion.",
+      "Do route belt color only to the badge, the 6px card stripe, and the filter dot.",
+      "Do carry every color through both themes: define it on dark :root, override it under .light.",
+      "Do design the check-in for a 3-second glance at tablet distance and the Alumnos views for planilla density."
+    ],
+    "donts": [
+      "Don't let two things be red on the same screen, or give Danger red the primary gradient.",
+      "Don't put a colored shadow anywhere except glow-rojo under the primary button and the active pill.",
+      "Don't use a 10px or 12px corner, or ship a borderless surface.",
+      "Don't let Shippori Mincho touch a paragraph, a value, a button, or a label.",
+      "Don't use belt hues for chrome, headings, buttons, or backgrounds.",
+      "Don't let it read as a fitness tracker (neon rings, workout-blue, Apple-Watch activity dials) or a corporate SaaS dashboard (infinite grey tables, blue sidebar, flat cold metric cards).",
+      "Don't add motion that doesn't report something — no idle loops, no parallax, no decorative drift.",
+      "Don't clip the check-in result card by pinning heights; let the centered column grow and the page scroll."
+    ]
+  }
+}

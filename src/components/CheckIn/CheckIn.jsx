@@ -13,17 +13,27 @@ import styles from "./CheckIn.module.css";
 const espera = (ms) => new Promise((r) => setTimeout(r, ms));
 const hoyCorto = () => formatoCorto(new Date());
 
+// Tótem: la ficha se muestra unos segundos y la pantalla vuelve sola al
+// campo de documento, lista para el próximo alumno.
+const SEGUNDOS_FICHA = 8;
+
 export default function CheckIn() {
   const [dni, setDni] = useState("");
   const [alumno, setAlumno] = useState(null);
   const [error, setError] = useState("");
   const [cargando, setCargando] = useState(false);
+  const [registro, setRegistro] = useState(0);
   const fichaRef = useRef(null);
+  const inputRef = useRef(null);
 
   useEffect(() => {
     if (alumno) {
       fichaRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+      const t = setTimeout(() => setAlumno(null), SEGUNDOS_FICHA * 1000);
+      return () => clearTimeout(t);
     }
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    inputRef.current?.focus();
   }, [alumno]);
 
   async function handleRegistrar() {
@@ -45,6 +55,7 @@ export default function CheckIn() {
 
     const actualizado = await registerAttendance(valor);
     setAlumno(actualizado);
+    setRegistro((n) => n + 1);
     setDni("");
     setCargando(false);
   }
@@ -55,6 +66,7 @@ export default function CheckIn() {
 
   const color = alumno ? colorParaCinta(alumno.cinta) : null;
   const saludo = alumno?.sexo === "Femenino" ? "Bienvenida" : "Bienvenido";
+  const repetido = Boolean(alumno?.yaRegistrado);
 
   return (
     <div className={styles.wrap}>
@@ -80,12 +92,13 @@ export default function CheckIn() {
           <>
             <div className={styles.form}>
               <input
+                ref={inputRef}
                 className={`input ${styles.input}`}
                 type="text"
                 inputMode="numeric"
                 placeholder="Documento"
                 value={dni}
-                onChange={(e) => setDni(e.target.value)}
+                onChange={(e) => { setDni(e.target.value); if (error) setError(""); }}
                 onKeyDown={handleKeyDown}
                 autoFocus
               />
@@ -99,8 +112,17 @@ export default function CheckIn() {
       </div>
 
       {alumno && (
-        <div ref={fichaRef} key={alumno.id + alumno.historial.length} className={styles.ficha}>
-          <div className={styles.bienvenida}>
+        <div
+          key={`barra-${registro}`}
+          className={styles.autoBarra}
+          style={{ animationDuration: `${SEGUNDOS_FICHA}s` }}
+          aria-hidden="true"
+        />
+      )}
+
+      {alumno && (
+        <div ref={fichaRef} key={`ficha-${registro}`} className={styles.ficha}>
+          <div className={`${styles.bienvenida} ${repetido ? styles["bienvenida--repetido"] : ""}`}>
             <span className={styles.bienvenidaCheck} aria-hidden="true">
               <svg viewBox="0 0 24 24">
                 <path
@@ -115,10 +137,14 @@ export default function CheckIn() {
             </span>
             <BlurText
               className={styles.bienvenidaTexto}
-              text={`¡${saludo}, ${alumno.nombre}!`}
+              text={repetido ? `Ya fichaste hoy, ${alumno.nombre}` : `¡${saludo}, ${alumno.nombre}!`}
               animateBy="words"
             />
-            <p className={styles.bienvenidaSub}>Asistencia registrada · {hoyCorto()}</p>
+            <p className={styles.bienvenidaSub}>
+              {repetido
+                ? `Tu asistencia de hoy ya estaba registrada · ${hoyCorto()}`
+                : `Asistencia registrada · ${hoyCorto()}`}
+            </p>
           </div>
 
           <FadeContent delay={0.35} duration={0.5}>

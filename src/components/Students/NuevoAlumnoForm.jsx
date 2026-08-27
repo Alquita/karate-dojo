@@ -2,7 +2,7 @@ import { useState } from "react";
 import { KYU_BELTS, DAN_LEVELS, GRUPOS, SEXOS } from "../../data/categories";
 import styles from "./NuevoAlumnoForm.module.css";
 
-const INICIAL = {
+const VACIO = {
   nombre: "",
   apellido: "",
   fechaNacimiento: "",
@@ -10,7 +10,7 @@ const INICIAL = {
   sexo: "",
   ocupacion: "",
   cinta: KYU_BELTS[0],
-  grupo: GRUPOS[0],
+  grupo: "",
   email: "",
   direccion: "",
   telefono: "",
@@ -18,23 +18,36 @@ const INICIAL = {
   observaciones: "",
 };
 
-export default function NuevoAlumnoForm({ onCancelar, onGuardar }) {
-  const [datos, setDatos] = useState(INICIAL);
+function desdeAlumno(a) {
+  return {
+    nombre: a.nombre || "",
+    apellido: a.apellido || "",
+    fechaNacimiento: a.fechaNacimiento || "",
+    dni: a.dni || "",
+    sexo: a.sexo || "",
+    ocupacion: a.ocupacion || "",
+    cinta: a.cinta || KYU_BELTS[0],
+    grupo: a.grupo || "",
+    email: a.email || "",
+    direccion: a.direccion || "",
+    telefono: a.telefono || "",
+    fechaIngreso: a.fechaIngreso || "",
+    observaciones: a.observaciones || "",
+  };
+}
+
+export default function NuevoAlumnoForm({ alumno, onCancelar, onGuardar }) {
+  const edicion = Boolean(alumno);
+  const [datos, setDatos] = useState(() => (edicion ? desdeAlumno(alumno) : VACIO));
   const [error, setError] = useState("");
 
   const set = (campo) => (e) =>
     setDatos((d) => ({ ...d, [campo]: e.target.value }));
 
   function handleGuardar() {
-    const obligatorios = {
-      nombre: "Nombre",
-      apellido: "Apellido",
-      fechaNacimiento: "Fecha de nacimiento",
-      dni: "Número de documento",
-      sexo: "Sexo",
-      email: "Correo electrónico",
-      fechaIngreso: "Fecha de ingreso al dojo",
-    };
+    // Los datos llegan de a poco (Julio los pasa por partes), así que sólo
+    // exigimos lo estructural; el resto se completa después editando.
+    const obligatorios = { nombre: "Nombre", apellido: "Apellido", dni: "Número de documento" };
     const falta = Object.entries(obligatorios).find(
       ([campo]) => !String(datos[campo]).trim()
     );
@@ -58,7 +71,9 @@ export default function NuevoAlumnoForm({ onCancelar, onGuardar }) {
 
   return (
     <div className={styles.form}>
-      <p className={styles.titulo}>Agregar / Modificar estudiante</p>
+      <p className={styles.titulo}>
+        {edicion ? `Editar información — ${alumno.apellido}, ${alumno.nombre}` : "Nuevo alumno"}
+      </p>
 
       <p className="section-label">Datos personales</p>
       <div className={styles.grid}>
@@ -68,13 +83,13 @@ export default function NuevoAlumnoForm({ onCancelar, onGuardar }) {
         <Campo label="Apellido" req>
           <input className="input" value={datos.apellido} onChange={set("apellido")} />
         </Campo>
-        <Campo label="Fecha de nacimiento" req>
-          <input className="input" type="date" value={datos.fechaNacimiento} onChange={set("fechaNacimiento")} />
-        </Campo>
         <Campo label="Número de documento" req>
           <input className="input" inputMode="numeric" value={datos.dni} onChange={set("dni")} />
         </Campo>
-        <Campo label="Sexo" req>
+        <Campo label="Fecha de nacimiento">
+          <input className="input" type="date" value={datos.fechaNacimiento} onChange={set("fechaNacimiento")} />
+        </Campo>
+        <Campo label="Sexo">
           <div className={styles.radios}>
             {SEXOS.map((s) => (
               <label key={s} className={styles.radio}>
@@ -97,7 +112,7 @@ export default function NuevoAlumnoForm({ onCancelar, onGuardar }) {
 
       <p className="section-label">Categoría en el dojo</p>
       <div className={styles.grid}>
-        <Campo label="Cinta / categoría" req>
+        <Campo label="Cinturón / categoría" req>
           <select className="select" value={datos.cinta} onChange={set("cinta")}>
             <optgroup label="Kyu">
               {KYU_BELTS.map((c) => <option key={c} value={c}>{c}</option>)}
@@ -107,19 +122,20 @@ export default function NuevoAlumnoForm({ onCancelar, onGuardar }) {
             </optgroup>
           </select>
         </Campo>
-        <Campo label="Grupo" req>
+        <Campo label="Grupo">
           <select className="select" value={datos.grupo} onChange={set("grupo")}>
+            <option value="">— Sin asignar —</option>
             {GRUPOS.map((g) => <option key={g} value={g}>{g}</option>)}
           </select>
         </Campo>
-        <Campo label="Fecha de ingreso al dojo" req>
+        <Campo label="Fecha de ingreso al dojo">
           <input className="input" type="date" value={datos.fechaIngreso} onChange={set("fechaIngreso")} />
         </Campo>
       </div>
 
       <p className="section-label">Contacto</p>
       <div className={styles.grid}>
-        <Campo label="Correo electrónico" req>
+        <Campo label="Correo electrónico">
           <input className="input" type="email" value={datos.email} onChange={set("email")} />
         </Campo>
         <Campo label="Teléfono">
@@ -141,7 +157,9 @@ export default function NuevoAlumnoForm({ onCancelar, onGuardar }) {
 
       {error && <p className={styles.error}>{error}</p>}
       <div className={styles.buttons}>
-        <button className="btn btn--primary" onClick={handleGuardar}>Guardar alumno</button>
+        <button className="btn btn--primary" onClick={handleGuardar}>
+          {edicion ? "Guardar cambios" : "Guardar alumno"}
+        </button>
         <button className="btn btn--secondary" onClick={onCancelar}>Cancelar</button>
       </div>
     </div>
