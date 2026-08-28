@@ -9,23 +9,7 @@
   padding: 24px 0;
 }
 
-.wrap::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  background:
-    linear-gradient(180deg, rgba(14, 14, 15, 0.68), rgba(14, 14, 15, 0.92)),
-    radial-gradient(circle at 50% 30%, rgba(211, 32, 42, 0.22), transparent 60%),
-    url("/dojo.jpg") center 32% / cover no-repeat;
-}
-
-:global(.light) .wrap::before {
-  background:
-    linear-gradient(180deg, rgba(250, 248, 244, 0.50), rgba(250, 248, 244, 0.78)),
-    radial-gradient(circle at 50% 30%, rgba(211, 32, 42, 0.12), transparent 60%),
-    url("/dojo.jpg") center 32% / cover no-repeat;
-}
+/* El fondo del dojo vive en .dojo-bg (index.css), a nivel app. */
 
 /* ── Barra de auto-retorno del tótem ────────────────────── */
 

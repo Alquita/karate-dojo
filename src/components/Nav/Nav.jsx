@@ -1,12 +1,17 @@
 import { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { motion } from "motion/react";
 import styles from "./Nav.module.css";
 
 const TABS = [
-  { id: "registro", label: "Registro de asistencia" },
-  { id: "alumnos", label: "Alumnos" },
+  { id: "registro", label: "Registro de asistencia", to: "/registro" },
+  { id: "alumnos", label: "Alumnos", to: "/alumnos" },
 ];
 
-export default function Nav({ active, onChange, isDark, onToggleTheme }) {
+export default function Nav({ isDark, onToggleTheme }) {
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
+  const active = pathname.startsWith("/alumnos") ? "alumnos" : "registro";
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -37,9 +42,16 @@ export default function Nav({ active, onChange, isDark, onToggleTheme }) {
           <button
             key={tab.id}
             className={`${styles.tab} ${active === tab.id ? styles["tab--active"] : ""}`}
-            onClick={() => onChange(tab.id)}
+            onClick={() => navigate(tab.to)}
           >
-            {tab.label}
+            {active === tab.id && (
+              <motion.span
+                layoutId="navTabPill"
+                className={styles.tabPill}
+                transition={{ type: "spring", stiffness: 420, damping: 34 }}
+              />
+            )}
+            <span className={styles.tabLabel}>{tab.label}</span>
           </button>
         ))}
       </div>

@@ -24,21 +24,35 @@
 
 .body {
   display: grid;
-  grid-template-columns: 1fr 380px;
+  grid-template-columns: 1fr 340px;
   gap: 28px;
   align-items: start;
 }
 
+/* Los grupos se acomodan en varias columnas según el ancho disponible.
+   column-width se adapta solo: 3 columnas en pantalla grande, 2, luego 1. */
 .grid {
-  display: flex;
-  flex-direction: column;
-  gap: 22px;
+  column-width: 300px;
+  column-gap: 18px;
 }
 
 .grupo {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  break-inside: avoid;
+  margin-bottom: 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.25s var(--ease-smooth);
+}
+
+.grupo:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.grupo:last-child {
+  margin-bottom: 0;
 }
 
 .grupoBanda {
@@ -46,10 +60,9 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 8px 14px;
-  border-radius: var(--radius-sm);
+  padding: 10px 16px;
   color: #fff;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -79,13 +92,84 @@
 .grupoCards {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+}
+
+/* ── Buscador ───────────────────────────────────────────── */
+.buscador {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  animation: slideUp 0.4s var(--ease-bounce) both;
+  animation-delay: 0.08s;
+}
+
+.buscadorIcono {
+  position: absolute;
+  left: 16px;
+  color: var(--ink-muted);
+  pointer-events: none;
+  transition: color 0.2s var(--ease-smooth);
+}
+
+.buscador:focus-within .buscadorIcono {
+  color: var(--indigo);
+}
+
+.buscadorInput {
+  width: 100%;
+  padding: 12px 44px 12px 42px;
+  font-size: 14px;
+  color: var(--ink);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-xs);
+  transition: border-color 0.2s var(--ease-smooth), box-shadow 0.2s var(--ease-smooth);
+}
+
+.buscadorInput::placeholder {
+  color: var(--ink-muted);
+}
+
+.buscadorInput:focus {
+  border-color: var(--indigo);
+  box-shadow: 0 0 0 3px var(--indigo-glow);
+}
+
+.buscadorInput::-webkit-search-cancel-button {
+  display: none;
+}
+
+.buscadorLimpiar {
+  position: absolute;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  font-size: 18px;
+  line-height: 1;
+  color: var(--ink-muted);
+  border-radius: 50%;
+  transition: background 0.2s, color 0.2s;
+}
+
+.buscadorLimpiar:hover {
+  background: var(--indigo-glow);
+  color: var(--indigo);
 }
 
 .detalle {
   position: sticky;
   top: 80px;
 }
+
+/* La entrada y el cambio de ficha los maneja motion/AnimatePresence en el JSX
+   (deslizado desde el costado + desenfoque). */
 
 .vacio {
   font-size: 14px;
@@ -141,5 +225,14 @@
   .headerRight {
     width: 100%;
     justify-content: space-between;
+  }
+  .grid {
+    column-width: auto;
+    columns: 1;
+  }
+  .grupoCards {
+    max-height: none;
+    overflow-y: visible;
+    padding-right: 0;
   }
 }

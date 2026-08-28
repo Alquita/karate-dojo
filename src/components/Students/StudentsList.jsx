@@ -1,4 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useNavigate, useMatch, Link } from "react-router-dom";
+import { AnimatePresence, motion } from "motion/react";
 import { getStudents, addStudent, updateStudent, removeStudent, addNota } from "../../lib/dataClient";
 import Filters from "./Filters";
 import StudentCard from "./StudentCard";
@@ -7,20 +9,37 @@ import StudentDetail from "./StudentDetail";
 import AttendanceSheet from "./AttendanceSheet";
 import StudentAttendance from "./StudentAttendance";
 import AnimatedContent from "../ui/AnimatedContent";
+import ScrollFade from "../ui/ScrollFade";
 import BlurText from "../ui/BlurText";
 import AnimatedCounter from "../ui/AnimatedCounter";
 import { GRUPOS } from "../../data/categories";
+import { nombreCompleto } from "../../utils/format";
 import styles from "./StudentsList.module.css";
 
+const soloDigitos = (v) => String(v || "").replace(/\D/g, "");
+const normalizar = (v) =>
+  String(v || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "");
+
 export default function StudentsList() {
+  const navigate = useNavigate();
+  const matchPlanillaGeneral = useMatch("/alumnos/planilla-general");
+  const matchPlanillaIndividual = useMatch("/alumnos/:id/planilla");
+  const matchFicha = useMatch("/alumnos/:id");
+
+  const idPlanilla = matchPlanillaIndividual?.params.id || null;
+  const idFicha =
+    matchFicha && matchFicha.params.id !== "planilla-general" ? matchFicha.params.id : null;
+  const seleccionadoId = idFicha || idPlanilla || null;
+
   const [students, setStudents] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [filtroCinta, setFiltroCinta] = useState("");
   const [filtroGrupo, setFiltroGrupo] = useState("");
-  const [seleccionadoId, setSeleccionadoId] = useState(null);
+  const [busqueda, setBusqueda] = useState("");
   const [formMode, setFormMode] = useState(null); // null | "nuevo" | "editar"
-  const [vista, setVista] = useState("lista");
-  const [alumnoPlanilla, setAlumnoPlanilla] = useState(null);
 
   useEffect(() => {
     cargar();
@@ -45,13 +64,24 @@ export default function StudentsList() {
     setCargando(false);
   }
 
-  const filtrados = students.filter((s) => {
-    if (filtroCinta && s.cinta !== filtroCinta) return false;
-    if (filtroGrupo && s.grupo !== filtroGrupo) return false;
-    return true;
-  });
+  const filtrados = useMemo(() => {
+    const q = normalizar(busqueda.trim());
+    const qDigitos = soloDigitos(busqueda);
+    return students.filter((s) => {
+      if (filtroCinta && s.cinta !== filtroCinta) return false;
+      if (filtroGrupo && s.grupo !== filtroGrupo) return false;
+      if (q) {
+        const nombre = normalizar(nombreCompleto(s));
+        const coincideNombre = nombre.includes(q);
+        const coincideDni = qDigitos && soloDigitos(s.dni).includes(qDigitos);
+        if (!coincideNombre && !coincideDni) return false;
+      }
+      return true;
+    });
+  }, [students, filtroCinta, filtroGrupo, busqueda]);
 
   const seleccionado = students.find((s) => s.id === seleccionadoId) || null;
+  const noExiste = !cargando && seleccionadoId && !seleccionado;
 
   const gruposConocidos = GRUPOS.filter((g) => filtrados.some((s) => s.grupo === g));
   const gruposExtra = [...new Set(filtrados.map((s) => s.grupo).filter((g) => !GRUPOS.includes(g)))];
@@ -59,7 +89,7 @@ export default function StudentsList() {
 
   async function handleBaja(id) {
     await removeStudent(id);
-    setSeleccionadoId(null);
+    navigate("/alumnos");
     cargar();
   }
 
@@ -81,16 +111,30 @@ export default function StudentsList() {
     cargar();
   }
 
-  if (vista === "planilla-grupal") {
-    return <AttendanceSheet students={students} onVolver={() => setVista("lista")} />;
+  if (matchPlanillaGeneral) {
+    return <AttendanceSheet students={students} onVolver={() => navigate("/alumnos")} />;
   }
 
-  if (vista === "planilla-individual" && alumnoPlanilla) {
+  if (idPlanilla) {
+    const alumno = students.find((s) => s.id === idPlanilla);
+    if (cargando) {
+      return (
+        <div className={styles.students}>
+          <p className={styles.vacio}>Cargando…</p>
+        </div>
+      );
+    }
+    if (!alumno) {
+      return (
+        <div className={styles.students}>
+          <p className={styles.vacio}>
+            Ese alumno no existe. <Link to="/alumnos">Volver a la lista</Link>
+          </p>
+        </div>
+      );
+    }
     return (
-      <StudentAttendance
-        alumno={alumnoPlanilla}
-        onVolver={() => { setVista("lista"); setAlumnoPlanilla(null); }}
-      />
+      <StudentAttendance alumno={alumno} onVolver={() => navigate(`/alumnos/${alumno.id}`)} />
     );
   }
 
@@ -107,7 +151,7 @@ export default function StudentsList() {
           </p>
           <button
             className="btn btn--primary"
-            onClick={() => setVista("planilla-grupal")}
+            onClick={() => navigate("/alumnos/planilla-general")}
           >
             Ver planilla general
           </button>
@@ -121,6 +165,41 @@ export default function StudentsList() {
         onGrupoChange={setFiltroGrupo}
         onNuevoAlumno={() => setFormMode((m) => (m === "nuevo" ? null : "nuevo"))}
       />
+
+      <div className={styles.buscador}>
+        <svg
+          className={styles.buscadorIcono}
+          width="16" height="16" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+          aria-hidden="true"
+        >
+          <circle cx="11" cy="11" r="7" />
+          <line x1="21" y1="21" x2="16.65" y2="16.65" />
+        </svg>
+        <input
+          className={styles.buscadorInput}
+          type="search"
+          placeholder="Buscar alumno por nombre o documento"
+          value={busqueda}
+          onChange={(e) => setBusqueda(e.target.value)}
+        />
+        <AnimatePresence>
+          {busqueda && (
+            <motion.button
+              key="limpiar"
+              className={styles.buscadorLimpiar}
+              onClick={() => setBusqueda("")}
+              initial={{ opacity: 0, scale: 0.6 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.6 }}
+              transition={{ duration: 0.15 }}
+              aria-label="Limpiar busqueda"
+            >
+              ×
+            </motion.button>
+          )}
+        </AnimatePresence>
+      </div>
 
       {formMode && (
         <div className={styles.modalOverlay} onClick={() => setFormMode(null)}>
@@ -138,12 +217,27 @@ export default function StudentsList() {
         <div className={styles.grid}>
           {cargando && <p className={styles.vacio}>Cargando…</p>}
           {!cargando && filtrados.length === 0 && (
-            <p className={styles.vacio}>Ningun alumno coincide con este filtro.</p>
+            <motion.p
+              className={styles.vacio}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
+              {busqueda
+                ? `Ningun alumno coincide con "${busqueda}".`
+                : "Ningun alumno coincide con este filtro."}
+            </motion.p>
           )}
           {!cargando && gruposOrdenados.map((grupo, gi) => {
             const delGrupo = filtrados.filter((s) => s.grupo === grupo);
             return (
-              <section key={grupo} className={styles.grupo}>
+              <AnimatedContent
+                key={grupo}
+                as="section"
+                className={styles.grupo}
+                distance={18}
+                duration={0.5}
+                delay={Math.min(gi, 6) * 0.06}
+              >
                 <div
                   className={styles.grupoBanda}
                   data-variant={gi % 2 === 0 ? "rojo" : "negro"}
@@ -151,36 +245,69 @@ export default function StudentsList() {
                   <span className={styles.grupoNombre}>{grupo || "Sin grupo"}</span>
                   <span className={styles.grupoContador}>{delGrupo.length}</span>
                 </div>
-                <div className={styles.grupoCards}>
-                  {delGrupo.map((alumno, i) => (
-                    <AnimatedContent key={alumno.id} distance={25} delay={i * 0.04}>
-                      <StudentCard
-                        alumno={alumno}
-                        onClick={() => setSeleccionadoId(alumno.id)}
-                      />
-                    </AnimatedContent>
-                  ))}
-                </div>
-              </section>
+                <ScrollFade className={styles.grupoCards} maxHeight={filtroGrupo ? null : 440}>
+                  <AnimatePresence initial={false}>
+                    {delGrupo.map((alumno) => (
+                      <motion.div
+                        key={alumno.id}
+                        layout
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.22, ease: [0.4, 0, 0.2, 1] }}
+                      >
+                        <StudentCard
+                          alumno={alumno}
+                          seleccionado={alumno.id === seleccionadoId}
+                          onClick={() =>
+                            navigate(
+                              alumno.id === seleccionadoId
+                                ? "/alumnos"
+                                : `/alumnos/${alumno.id}`
+                            )
+                          }
+                        />
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
+                </ScrollFade>
+              </AnimatedContent>
             );
           })}
         </div>
 
         <div className={styles.detalle}>
-          {seleccionado ? (
-            <StudentDetail
-              alumno={seleccionado}
-              onBaja={handleBaja}
-              onNota={handleNota}
-              onEditar={() => setFormMode("editar")}
-              onVerPlanilla={() => {
-                setAlumnoPlanilla(seleccionado);
-                setVista("planilla-individual");
-              }}
-            />
-          ) : (
-            <p className={styles.vacio}>Toca un alumno para ver la ficha completa.</p>
-          )}
+          <AnimatePresence mode="wait">
+            {seleccionado ? (
+              <motion.div
+                key={seleccionado.id}
+                initial={{ opacity: 0, x: 26, filter: "blur(8px)" }}
+                animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+                exit={{ opacity: 0, x: -18, filter: "blur(8px)" }}
+                transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
+              >
+                <StudentDetail
+                  alumno={seleccionado}
+                  onBaja={handleBaja}
+                  onNota={handleNota}
+                  onEditar={() => setFormMode("editar")}
+                  onVerPlanilla={() => navigate(`/alumnos/${seleccionado.id}/planilla`)}
+                />
+              </motion.div>
+            ) : (
+              <motion.p
+                key="vacio"
+                className={styles.vacio}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                {noExiste
+                  ? "Ese alumno no existe o fue dado de baja."
+                  : "Tocá un alumno para ver la ficha completa."}
+              </motion.p>
+            )}
+          </AnimatePresence>
         </div>
       </div>
     </div>

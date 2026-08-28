@@ -13,6 +13,11 @@ import { supabase, HAY_SUPABASE } from "./supabaseClient";
 
 const SELECT_ALUMNO = "*, asistencias(fecha), notas(id, texto, creado_en)";
 
+// El DNI se guarda solo con números. Al buscar (check-in) el alumno lo puede
+// tipear con puntos o espacios ("25.698.881") y lo mismo lo encuentra.
+const soloDigitos = (v) => String(v || "").replace(/\D/g, "");
+const docParaGuardar = (dni) => soloDigitos(dni) || String(dni || "").trim();
+
 function mapearAlumno(row, resumen) {
   const historial = (row.asistencias || []).map((a) => a.fecha).sort().reverse();
   const notas = (row.notas || [])
@@ -48,7 +53,7 @@ function mapearAlumno(row, resumen) {
 
 function alumnoParaGuardar(datos) {
   return {
-    documento: (datos.dni || "").trim(),
+    documento: docParaGuardar(datos.dni),
     nombre: (datos.nombre || "").trim(),
     apellido: (datos.apellido || "").trim(),
     fecha_nacimiento: datos.fechaNacimiento || null,
@@ -89,7 +94,7 @@ const sb = {
     const { data, error } = await supabase
       .from("alumnos")
       .select(SELECT_ALUMNO)
-      .eq("documento", dni.trim())
+      .eq("documento", soloDigitos(dni))
       .eq("activo", true)
       .maybeSingle();
     if (error) throw error;
@@ -172,13 +177,15 @@ const mock = {
   },
 
   async findByDni(dni) {
-    const alumno = students.find((s) => s.dni === dni.trim());
+    const buscado = soloDigitos(dni);
+    const alumno = students.find((s) => soloDigitos(s.dni) === buscado);
     return delay(alumno ? { ...alumno } : null);
   },
 
   async registerAttendance(dni) {
     const hoy = toISODate(new Date());
-    const idx = students.findIndex((s) => s.dni === dni.trim());
+    const buscado = soloDigitos(dni);
+    const idx = students.findIndex((s) => soloDigitos(s.dni) === buscado);
     if (idx === -1) return delay(null);
 
     const alumno = students[idx];

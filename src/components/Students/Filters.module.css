@@ -1,9 +1,9 @@
 .filters {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
   margin-bottom: 24px;
-  padding: 14px 16px;
+  padding: 16px;
   background: var(--glass-bg);
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
@@ -14,70 +14,31 @@
   animation-delay: 0.05s;
 }
 
+/* Dos filas iguales: etiqueta a la izquierda (misma columna) + chips a la derecha. */
 .fila {
   display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-/* ── Segmented (grupo) ──────────────────────────────────── */
-
-.segmented {
-  display: flex;
-  gap: 3px;
-  padding: 3px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-pill);
-  flex-wrap: wrap;
-}
-
-.seg {
-  padding: 7px 14px;
-  font-size: 12.5px;
-  font-weight: 600;
-  color: var(--ink-muted);
-  border-radius: var(--radius-pill);
-  transition: color 0.2s, background 0.2s;
-  white-space: nowrap;
-}
-
-.seg:hover {
-  color: var(--ink);
-}
-
-.segActivo {
-  color: #fff;
-  background: linear-gradient(135deg, var(--indigo), var(--indigo-light));
-  box-shadow: var(--shadow-indigo);
-}
-
-.nuevo {
-  margin-left: auto;
-}
-
-/* ── Chips (cinta) ─────────────────────────────────────── */
-
-.cintaFila {
-  display: flex;
   align-items: flex-start;
-  gap: 12px;
+  gap: 12px 14px;
+  flex-wrap: wrap;
 }
 
-.cintaLabel {
+.filaLabel {
+  width: 52px;
   flex-shrink: 0;
-  padding-top: 6px;
+  padding-top: 8px;
   font-size: 11px;
   font-weight: 700;
+  line-height: 1;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--ink-muted);
 }
 
 .chips {
+  flex: 1 1 320px;
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 6px;
 }
 
@@ -85,9 +46,10 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 5px 11px;
+  padding: 6px 12px;
   font-size: 12.5px;
   font-weight: 500;
+  white-space: nowrap;
   color: var(--ink);
   background: var(--surface);
   border: 1px solid var(--border);
@@ -97,6 +59,11 @@
 
 .chip:hover {
   border-color: var(--indigo);
+}
+
+.chip:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--indigo-glow);
 }
 
 .chipActivo {
@@ -113,14 +80,37 @@
   flex-shrink: 0;
 }
 
+.chipActivo .dot {
+  border-color: rgba(255, 255, 255, 0.55);
+}
+
+.sep {
+  width: 1px;
+  align-self: stretch;
+  min-height: 20px;
+  margin: 0 3px;
+  background: var(--border);
+}
+
+.nuevo {
+  margin-left: auto;
+  align-self: flex-start;
+}
+
 @media (max-width: 600px) {
+  .fila {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .filaLabel {
+    width: auto;
+    padding-top: 0;
+  }
   .nuevo {
     margin-left: 0;
     width: 100%;
   }
-  .cintaFila {
-    flex-direction: column;
-    gap: 6px;
+  .sep {
+    display: none;
   }
-  .cintaLabel { padding-top: 0; }
 }

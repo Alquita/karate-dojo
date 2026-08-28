@@ -53,8 +53,33 @@ export const COLOR_CINTA = {
   Marrón: { bg: "#E4CDBA", fg: "#5A3115", border: "#8A5230" },
 };
 
+// Cinturón negro: la "linita" de la cinta cambia según la categoría.
+//  - Dan adulto  → dorada
+//  - Dan cadete  → blanca (tono frío, distinto del Blanco kyu)
+//  - Dan juvenil → celeste apagado (distinto del Celeste kyu)
+const DAN_ADULTO = { bg: "#26241F", fg: "#E8C567", border: "#0A0A0A" };
+const DAN_CADETE = { bg: "#242424", fg: "#ECECEC", border: "#0A0A0A" };
+const DAN_JUVENIL = { bg: "#1E2429", fg: "#AED6E8", border: "#0A0A0A" };
+
+export const ACCENT_DAN_ADULTO = "#E8C567";
+export const ACCENT_DAN_CADETE = "#D6DBDF";
+export const ACCENT_DAN_JUVENIL = "#9DC3D4";
+
+export function esDan(cinta) {
+  return Boolean(cinta) && !COLOR_CINTA[cinta];
+}
+
 export function colorParaCinta(cinta) {
   if (COLOR_CINTA[cinta]) return COLOR_CINTA[cinta];
-  // cualquier variante de Dan cae acá (negro con detalle dorado)
-  return { bg: "#26241F", fg: "#E8C567", border: "#0A0A0A" };
+  if (/juvenil/i.test(cinta)) return DAN_JUVENIL;
+  if (/cadete/i.test(cinta)) return DAN_CADETE;
+  return DAN_ADULTO;
+}
+
+// Color de la "linita" del cinturón: para la franja de la tarjeta y el punto del filtro.
+export function accentParaCinta(cinta) {
+  if (COLOR_CINTA[cinta]) return COLOR_CINTA[cinta].border;
+  if (/juvenil/i.test(cinta)) return ACCENT_DAN_JUVENIL;
+  if (/cadete/i.test(cinta)) return ACCENT_DAN_CADETE;
+  return ACCENT_DAN_ADULTO;
 }

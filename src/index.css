@@ -147,6 +147,38 @@ ul, ol { list-style: none; }
   max-width: 1100px;
   margin: 0 auto;
   padding: 32px 24px 64px;
+  transition: max-width 0.35s var(--ease-smooth);
+}
+
+/* La pantalla de Alumnos aprovecha el ancho completo para acomodar los grupos */
+.app__main--ancho {
+  max-width: 1480px;
+}
+
+/* ── Fondo del dojo (pantalla de registro) ──────────────── */
+
+.dojo-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.5s var(--ease-smooth);
+  background:
+    linear-gradient(180deg, rgba(14, 14, 15, 0.46), rgba(14, 14, 15, 0.84)),
+    radial-gradient(circle at 50% 28%, rgba(211, 32, 42, 0.15), transparent 60%),
+    url("/dojo.jpg") center 32% / cover no-repeat;
+}
+
+.dojo-bg[data-visible="true"] {
+  opacity: 1;
+}
+
+.light .dojo-bg {
+  background:
+    linear-gradient(180deg, rgba(250, 248, 244, 0.42), rgba(250, 248, 244, 0.72)),
+    radial-gradient(circle at 50% 28%, rgba(179, 22, 31, 0.10), transparent 60%),
+    url("/dojo.jpg") center 32% / cover no-repeat;
 }
 
 /* ── Shared: Buttons ────────────────────────────────────── */

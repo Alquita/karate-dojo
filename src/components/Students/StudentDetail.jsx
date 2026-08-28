@@ -2,123 +2,143 @@ import { useState } from "react";
 import { colorParaCinta } from "../../data/categories";
 import { formatoCorto, formatoLargo, edadDesde } from "../../utils/dates";
 import { nombreCompleto } from "../../utils/format";
-import FadeContent from "../ui/FadeContent";
 import styles from "./StudentDetail.module.css";
 
 export default function StudentDetail({ alumno, onBaja, onNota, onEditar, onVerPlanilla }) {
   const [nota, setNota] = useState("");
   const [confirmarBaja, setConfirmarBaja] = useState(false);
   const color = colorParaCinta(alumno.cinta);
+  const edad = edadDesde(alumno.fechaNacimiento);
 
   return (
-    <FadeContent>
-      <div className={styles.detalle}>
-        <div className={styles.header}>
-          <div>
-            <p className={styles.grupo}>{alumno.grupo}</p>
-            <h2 className={styles.nombre}>{nombreCompleto(alumno)}</h2>
-            <span
-              className="badge"
-              style={{ background: color.bg, color: color.fg, borderColor: color.border }}
-            >
-              {alumno.cinta}
-            </span>
-          </div>
-          <div className={styles.acciones}>
-            <button className="btn btn--secondary" onClick={onEditar}>
-              Editar información
-            </button>
-            <button className="btn btn--danger-ghost" onClick={() => setConfirmarBaja(true)}>
-              Dar de baja
-            </button>
-          </div>
+    <div className={styles.detalle}>
+      <div className={styles.header} style={{ animationDelay: "0.04s" }}>
+        <div>
+          <p className={styles.grupo}>{alumno.grupo}</p>
+          <h2 className={styles.nombre}>{nombreCompleto(alumno)}</h2>
+          <span
+            className="badge"
+            style={{ background: color.bg, color: color.fg, borderColor: color.border }}
+          >
+            {alumno.cinta}
+          </span>
         </div>
-
-        {confirmarBaja && (
-          <div className={styles.confirm}>
-            <p>Dar de baja a {alumno.nombre} del sistema.</p>
-            <div className={styles.confirmButtons}>
-              <button className="btn btn--danger" onClick={() => onBaja(alumno.id)}>
-                Confirmar baja
-              </button>
-              <button className="btn btn--secondary" onClick={() => setConfirmarBaja(false)}>
-                Cancelar
-              </button>
-            </div>
-          </div>
-        )}
-
-        <dl className={styles.lista}>
-          <Fila label="Documento" valor={alumno.dni} />
-          <Fila label="Fecha de nacimiento" valor={fechaOGuion(alumno.fechaNacimiento)} />
-          <Fila label="Edad" valor={edadDesde(alumno.fechaNacimiento) !== "" ? `${edadDesde(alumno.fechaNacimiento)} años` : "-"} />
-          <Fila label="Sexo" valor={alumno.sexo || "-"} />
-          <Fila label="Ocupacion / profesion" valor={alumno.ocupacion || "-"} />
-          <Fila label="Correo electronico" valor={alumno.email || "-"} />
-          <Fila label="Telefono" valor={alumno.telefono || alumno.contacto || "-"} />
-          <Fila label="Direccion" valor={alumno.direccion || "-"} />
-          <Fila label="Ingreso al dojo" valor={fechaOGuion(alumno.fechaIngreso || alumno.ingreso)} />
-          <Fila label="Asistencias totales" valor={alumno.totalAsistencias} />
-          <Fila
-            label="Proximo examen"
-            valor={alumno.proximoExamen ? formatoCorto(alumno.proximoExamen) : "Sin definir"}
-          />
-          <Fila
-            label="Ultimo examen rendido"
-            valor={alumno.ultimoExamen ? formatoCorto(alumno.ultimoExamen) : "Todavia no rindio"}
-          />
-        </dl>
-
-        {alumno.observaciones && (
-          <div className={styles.observaciones}>
-            <p className="section-label">Observaciones generales / medicas</p>
-            <p className={styles.observacionesTexto}>{alumno.observaciones}</p>
-          </div>
-        )}
-
-        <button className={`btn btn--primary ${styles.planillaBtn}`} onClick={onVerPlanilla}>
-          Ver planilla de asistencia
-        </button>
-
-        <div className={styles.notas}>
-          <p className="section-label">Notas (solo las ve el profesor)</p>
-          {alumno.notas.length === 0 && <p className={styles.vacio}>Sin notas todavia.</p>}
-          {alumno.notas.map((n, i) => (
-            <p key={i} className={styles.nota}>{n}</p>
-          ))}
-          <div className={styles.notaForm}>
-            <input
-              className="input"
-              placeholder="Recordar mejorar la guardia baja"
-              value={nota}
-              onChange={(e) => setNota(e.target.value)}
-            />
-            <button
-              className="btn btn--secondary"
-              onClick={() => {
-                onNota(alumno.id, nota);
-                setNota("");
-              }}
-            >
-              Agregar
-            </button>
-          </div>
+        <div className={styles.acciones}>
+          <button className="btn btn--secondary" onClick={onEditar}>
+            Editar información
+          </button>
+          <button className="btn btn--danger-ghost" onClick={() => setConfirmarBaja(true)}>
+            Dar de baja
+          </button>
         </div>
       </div>
-    </FadeContent>
+
+      {confirmarBaja && (
+        <div className={styles.confirm}>
+          <p>Dar de baja a {alumno.nombre} del sistema.</p>
+          <div className={styles.confirmButtons}>
+            <button className="btn btn--danger" onClick={() => onBaja(alumno.id)}>
+              Confirmar baja
+            </button>
+            <button className="btn btn--secondary" onClick={() => setConfirmarBaja(false)}>
+              Cancelar
+            </button>
+          </div>
+        </div>
+      )}
+
+      <div className={styles.seccion} style={{ animationDelay: "0.1s" }}>
+        <p className="section-label">Datos personales</p>
+        <dl className={styles.campos}>
+          <Campo label="Nacimiento" valor={fechaOGuion(alumno.fechaNacimiento)} />
+          <Campo label="Edad" valor={edad !== "" ? `${edad} años` : "—"} />
+          <Campo label="Sexo" valor={alumno.sexo || "—"} />
+          <Campo label="Ocupación" valor={alumno.ocupacion || "—"} />
+        </dl>
+      </div>
+
+      <div className={styles.seccion} style={{ animationDelay: "0.16s" }}>
+        <p className="section-label">Contacto</p>
+        <dl className={styles.campos}>
+          <Campo label="Documento" valor={alumno.dni} mono />
+          <Campo label="Teléfono" valor={alumno.telefono || alumno.contacto || "—"} mono />
+          <Campo label="Correo electrónico" valor={alumno.email || "—"} ancho />
+          <Campo label="Dirección" valor={alumno.direccion || "—"} ancho />
+        </dl>
+      </div>
+
+      <div className={styles.seccion} style={{ animationDelay: "0.22s" }}>
+        <p className="section-label">En el dojo</p>
+        <dl className={styles.campos}>
+          <Campo
+            label="Ingreso al dojo"
+            valor={fechaOGuion(alumno.fechaIngreso || alumno.ingreso)}
+          />
+          <Campo label="Asistencias totales" valor={alumno.totalAsistencias} mono />
+          <Campo
+            label="Próximo examen"
+            valor={alumno.proximoExamen ? formatoCorto(alumno.proximoExamen) : "Sin definir"}
+          />
+          <Campo
+            label="Último examen"
+            valor={alumno.ultimoExamen ? formatoCorto(alumno.ultimoExamen) : "Todavía no rindió"}
+          />
+        </dl>
+      </div>
+
+      {alumno.observaciones && (
+        <div className={styles.seccion} style={{ animationDelay: "0.28s" }}>
+          <p className="section-label">Observaciones generales / médicas</p>
+          <p className={styles.observacionesTexto}>{alumno.observaciones}</p>
+        </div>
+      )}
+
+      <button
+        className={`btn btn--primary ${styles.planillaBtn}`}
+        onClick={onVerPlanilla}
+        style={{ animationDelay: "0.32s" }}
+      >
+        Ver planilla de asistencia
+      </button>
+
+      <div className={styles.notas} style={{ animationDelay: "0.36s" }}>
+        <p className="section-label">Notas (solo las ve el profesor)</p>
+        {alumno.notas.length === 0 && <p className={styles.vacio}>Sin notas todavía.</p>}
+        {alumno.notas.map((n, i) => (
+          <p key={i} className={styles.nota}>{n}</p>
+        ))}
+        <div className={styles.notaForm}>
+          <input
+            className="input"
+            placeholder="Recordar mejorar la guardia baja"
+            value={nota}
+            onChange={(e) => setNota(e.target.value)}
+          />
+          <button
+            className="btn btn--secondary"
+            onClick={() => {
+              onNota(alumno.id, nota);
+              setNota("");
+            }}
+          >
+            Agregar
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
 
 function fechaOGuion(iso) {
-  if (!iso) return "-";
+  if (!iso) return "—";
   return formatoLargo(iso);
 }
 
-function Fila({ label, valor }) {
+function Campo({ label, valor, mono, ancho }) {
   return (
-    <div className={styles.fila}>
-      <dt>{label}</dt>
-      <dd>{valor}</dd>
+    <div className={`${styles.campo} ${ancho ? styles.campoAncho : ""}`}>
+      <dt className={styles.campoLabel}>{label}</dt>
+      <dd className={`${styles.campoValor} ${mono ? styles.mono : ""}`}>{valor}</dd>
     </div>
   );
 }

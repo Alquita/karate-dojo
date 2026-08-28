@@ -1,18 +1,33 @@
-import { KYU_BELTS, DAN_LEVELS, GRUPOS, colorParaCinta } from "../../data/categories";
+import { KYU_BELTS, DAN_LEVELS, GRUPOS, accentParaCinta } from "../../data/categories";
 import styles from "./Filters.module.css";
 
 const GRUPO_OPCIONES = ["", ...GRUPOS];
-const CINTA_OPCIONES = ["", ...KYU_BELTS, ...DAN_LEVELS];
+
+const DAN_ADULTOS = DAN_LEVELS.filter((c) => !/cadete|juvenil/i.test(c));
+const DAN_CADETES = DAN_LEVELS.filter((c) => /cadete/i.test(c));
+const DAN_JUVENILES = DAN_LEVELS.filter((c) => /juvenil/i.test(c));
 
 export default function Filters({ cinta, grupo, onCintaChange, onGrupoChange, onNuevoAlumno }) {
+  const chipCinta = (c) => (
+    <button
+      key={c}
+      className={`${styles.chip} ${cinta === c ? styles.chipActivo : ""}`}
+      onClick={() => onCintaChange(c)}
+    >
+      <span className={styles.dot} style={{ background: accentParaCinta(c) }} />
+      {c}
+    </button>
+  );
+
   return (
     <div className={styles.filters}>
       <div className={styles.fila}>
-        <div className={styles.segmented} role="group" aria-label="Filtrar por grupo">
+        <span className={styles.filaLabel}>Grupos</span>
+        <div className={styles.chips} role="group" aria-label="Filtrar por grupo">
           {GRUPO_OPCIONES.map((g) => (
             <button
               key={g || "todos"}
-              className={`${styles.seg} ${grupo === g ? styles.segActivo : ""}`}
+              className={`${styles.chip} ${grupo === g ? styles.chipActivo : ""}`}
               onClick={() => onGrupoChange(g)}
             >
               {g || "Todos"}
@@ -24,25 +39,29 @@ export default function Filters({ cinta, grupo, onCintaChange, onGrupoChange, on
         </button>
       </div>
 
-      <div className={styles.cintaFila}>
-        <span className={styles.cintaLabel}>Cinta</span>
+      <div className={styles.fila}>
+        <span className={styles.filaLabel}>Cinta</span>
         <div className={styles.chips} role="group" aria-label="Filtrar por cinta">
-          {CINTA_OPCIONES.map((c) => {
-            const activo = cinta === c;
-            const col = c ? colorParaCinta(c) : null;
-            return (
-              <button
-                key={c || "todas"}
-                className={`${styles.chip} ${activo ? styles.chipActivo : ""}`}
-                onClick={() => onCintaChange(c)}
-              >
-                {col && (
-                  <span className={styles.dot} style={{ background: col.border }} />
-                )}
-                {c || "Todas"}
-              </button>
-            );
-          })}
+          <button
+            className={`${styles.chip} ${cinta === "" ? styles.chipActivo : ""}`}
+            onClick={() => onCintaChange("")}
+          >
+            Todas
+          </button>
+
+          {KYU_BELTS.map(chipCinta)}
+
+          <span className={styles.sep} aria-hidden="true" />
+
+          {DAN_ADULTOS.map(chipCinta)}
+
+          <span className={styles.sep} aria-hidden="true" />
+
+          {DAN_CADETES.map(chipCinta)}
+
+          <span className={styles.sep} aria-hidden="true" />
+
+          {DAN_JUVENILES.map(chipCinta)}
         </div>
       </div>
     </div>

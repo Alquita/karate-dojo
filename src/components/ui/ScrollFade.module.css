@@ -1,0 +1,30 @@
+.wrap {
+  position: relative;
+}
+
+.scroll {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scroll-behavior: smooth;
+}
+
+.fadeTop,
+.fadeBottom {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 44px;
+  pointer-events: none;
+  transition: opacity 0.25s var(--ease-smooth);
+  z-index: 2;
+}
+
+.fadeTop {
+  top: 0;
+  background: linear-gradient(to bottom, var(--surface), transparent);
+}
+
+.fadeBottom {
+  bottom: 0;
+  background: linear-gradient(to top, var(--surface), transparent);
+}

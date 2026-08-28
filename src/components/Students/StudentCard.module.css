@@ -1,19 +1,21 @@
+/* Cada alumno es una fila de un listado, no una tarjeta suelta.
+   El contenedor del grupo aporta borde, radio y sombra. */
 .card {
   position: relative;
   display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 16px 18px 16px 22px;
-  background: var(--glass-bg);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-sm);
-  text-align: left;
-  overflow: hidden;
-  transition: transform 0.3s var(--ease-bounce), box-shadow 0.3s;
+  align-items: center;
+  gap: 10px;
   width: 100%;
+  padding: 13px 16px 13px 22px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  transition: background 0.18s var(--ease-smooth), padding-left 0.18s var(--ease-smooth);
+}
+
+.card:last-child {
+  border-bottom: none;
 }
 
 .belt {
@@ -21,37 +23,83 @@
   left: 0;
   top: 0;
   bottom: 0;
-  width: 6px;
+  width: 4px;
+  transition: width 0.18s var(--ease-smooth);
+}
+
+/* Cinturón negro: en vez de una franja lisa, "linitas" entrecortadas del color
+   de la categoría (dorado adulto / blanco cadete / celeste juvenil). */
+.beltDan {
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      var(--acc) 0 5px,
+      transparent 5px 12px
+    ),
+    #0a0a0a;
+}
+
+:global(.light) .beltDan {
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      var(--acc) 0 5px,
+      transparent 5px 12px
+    ),
+    #1a1a1a;
 }
 
 .card:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-lg);
+  background: var(--indigo-glow);
+  padding-left: 26px;
 }
 
-.top {
+.card:hover .belt {
+  width: 6px;
+}
+
+.card:active {
+  background: color-mix(in srgb, var(--indigo) 16%, transparent);
+}
+
+.info {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 10px;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+  min-width: 0;
 }
 
 .nombre {
   font-family: var(--font-display);
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
   line-height: 1.3;
   color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color 0.18s var(--ease-smooth);
 }
 
 .meta {
-  font-size: 13px;
+  font-size: 12px;
   color: var(--ink-muted);
+  font-family: var(--font-mono);
 }
 
-.asistencias {
-  font-size: 12px;
-  font-weight: 500;
+.seleccionado {
+  background: color-mix(in srgb, var(--indigo) 10%, transparent);
+}
+
+.seleccionado:hover {
+  background: color-mix(in srgb, var(--indigo) 13%, transparent);
+}
+
+.seleccionado .belt {
+  width: 6px;
+}
+
+.seleccionado .nombre {
   color: var(--indigo);
-  margin-top: 2px;
 }
