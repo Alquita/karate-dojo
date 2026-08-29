@@ -1,0 +1,130 @@
+.reporte {
+  animation: slideUp 0.4s var(--ease-bounce) both;
+}
+
+.barra {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.periodo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.navMes {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 17px;
+  color: var(--ink-muted);
+  transition: background 0.2s, color 0.2s;
+}
+
+.navMes:hover {
+  background: var(--indigo);
+  color: #fff;
+}
+
+.derecha {
+  display: flex;
+  gap: 8px;
+}
+
+.hoja {
+  padding: 28px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+}
+
+.hojaHead {
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid var(--border);
+}
+
+.dojo {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--indigo);
+  margin-bottom: 6px;
+}
+
+.tituloHoja {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.subtitulo {
+  margin-top: 4px;
+  font-size: 13px;
+  font-family: var(--font-mono);
+  color: var(--ink-muted);
+}
+
+.tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.tabla th {
+  text-align: left;
+  padding: 8px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  border-bottom: 2px solid var(--border);
+}
+
+.tabla td {
+  padding: 7px 10px;
+  border-bottom: 1px solid var(--border);
+  color: var(--ink);
+}
+
+.tabla tbody tr:nth-child(even) {
+  background: color-mix(in srgb, var(--ink) 3%, transparent);
+}
+
+.thNum {
+  width: 44px;
+  text-align: center !important;
+  font-family: var(--font-mono);
+  color: var(--ink-muted);
+}
+
+@media print {
+  .noPrint { display: none !important; }
+  .reporte { animation: none; }
+  .hoja {
+    padding: 0;
+    border: none;
+    box-shadow: none;
+    background: #fff;
+  }
+  .dojo { color: #000; }
+  .tituloHoja, .tabla td { color: #000; }
+  .tabla th { color: #000; border-bottom: 2px solid #000; }
+  .tabla td { border-bottom: 1px solid #999; }
+  .tabla tbody tr:nth-child(even) { background: #f0f0f0; }
+}

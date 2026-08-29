@@ -265,6 +265,18 @@ The full-width header above each age-group section in the Alumnos list. `8px 14p
 ### Signature — Welcome Banner
 On a successful check-in, above the result ficha: a 52px red-gradient circle with a white ✓ that pops in on a bounce ease, then "¡Bienvenido/a, {nombre}!" in 28px Shippori Mincho Rojo Shidokan, animated word-by-word (BlurText), then "Asistencia registrada · {fecha}" in 12px uppercase Ink Muted. The rest of the ficha fades in 0.35s behind it.
 
+### Config Drawer
+The instructor's settings, reached from a gear button next to the theme toggle in the nav. While the panel is open the gear button fills with `--indigo-glow` and turns indigo (active state), and the gear itself spins slowly and continuously (motion, 6s linear loop); on close it unwinds to rest. A glass panel (`--glass-bg`, `blur(14px)`, `--glass-border`, `--shadow-xl`) slides in from the right on a spring with a slight scale-and-fade from `0.98`; the backdrop's blur ramps `0 → 4px` as it dims. Escape and a backdrop click close it; body scroll locks while open. Its four sections (Reporte de activos, Cálculo de asistencia, Resumen, Tema) each carry a Rojo Shidokan stroke icon beside an uppercase title and enter once in a rightward stagger (`x: 20 → 0`, ~70ms apart) — one authored moment, not a per-section loop. "% mínimo para rendir" is four fields, one per age group, since the federation threshold differs by group. Preferences persist in Supabase (`config` table), never `localStorage`.
+
+### Signature — Attendance Percentage Block
+The headline of every planilla. A single IBM Plex Mono figure — 34px on the group sheet, 44px on the individual — in Rojo Shidokan, counting up from 0 on mount (rAF ease-out-cubic, same family as the Enso ring), with an 11px uppercase Ink Muted label under it naming the period ("asistencia · marzo 2026"). It sits in a glass panel; on the individual sheet a `--border` rule separates it from the "Apto para rendir" chip (Moss when met, Amber when not) and the next-exam lines. The denominator is `clasesPorSemana` from config, so the number re-derives instantly when the instructor changes that setting.
+
+### Ficha del alumno — indicador "Apto para rendir"
+Directly under the header of `StudentDetail`, a full-width status strip: a 34px filled circle (Moss ✓ when met, Danger ✗ when not) beside a title and a mono sub-line ("{pct}% de asistencia este año · mínimo {umbral}%"). It compares the student's year-to-date attendance rate — attendances this year over `clasesPorSemana × weeks elapsed` — against that age group's threshold from the Config Drawer, so it re-evaluates the moment the instructor changes the setting. Moss and Danger here are state colors on the one element reporting that state, per the One Red Rule.
+
+### Planilla grid
+`border-collapse: separate` with sticky `thead` and sticky `tfoot` inside an `overflow: auto` wrapper capped at `72vh`. A 2px `--border` rule falls every seventh column (the week boundary); weekend columns and the totals row carry a faint `--ink` 3% wash. A trained day is a filled cell — `--moss-soft` background plus the Moss ✓ — so attendance reads as a block, not a mark. Rows zebra at `--ink` 2.5%. In the totals row, a zero is `--ink-muted` at 0.35 opacity and light weight so the real counts carry the eye; the grand total and the average % are Rojo Shidokan. The annual view swaps checks for per-month counts on a five-step Moss density scale. After the % column, an "Apto" column shows a Moss ✓ or a Danger ✗ per student — the same exam-eligibility check as the ficha strip, evaluated against that student's group threshold; its footer cell is the count of eligible students.
+
 ## Do's and Don'ts
 
 ### Do:

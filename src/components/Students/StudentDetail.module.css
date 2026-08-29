@@ -11,10 +11,67 @@
 /* Cada bloque de la ficha entra escalonado (delay inline por bloque).
    El contenedor .detalleAnim ya trae el deslizado desde el costado. */
 .header,
+.rendir,
 .seccion,
 .planillaBtn,
 .notas {
   animation: bloqueEntra 0.4s var(--ease-smooth) both;
+}
+
+/* ── Apto para rendir ───────────────────────────────────── */
+
+.rendir {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding: 12px 14px;
+  border: 1px solid;
+  border-radius: var(--radius-sm);
+}
+
+.rendir--si {
+  background: var(--moss-soft);
+  border-color: color-mix(in srgb, var(--moss) 35%, transparent);
+}
+
+.rendir--no {
+  background: var(--danger-soft);
+  border-color: color-mix(in srgb, var(--danger) 30%, transparent);
+}
+
+.rendirIcono {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  color: #fff;
+}
+
+.rendir--si .rendirIcono { background: var(--moss); }
+.rendir--no .rendirIcono { background: var(--danger); }
+
+.rendirIcono svg {
+  width: 18px;
+  height: 18px;
+}
+
+.rendirTitulo {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.rendir--si .rendirTitulo { color: var(--moss); }
+.rendir--no .rendirTitulo { color: var(--danger); }
+
+.rendirSub {
+  font-size: 12px;
+  color: var(--ink-muted);
+  font-family: var(--font-mono);
 }
 
 @keyframes bloqueEntra {

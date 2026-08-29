@@ -14,6 +14,12 @@
   transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
 }
 
+/* Con el panel de config abierto, el nav queda sobre el backdrop del drawer
+   (z-index 300) para que se vea girar el engranaje. */
+.nav--config {
+  z-index: 400;
+}
+
 .nav--scrolled {
   background: var(--glass-bg);
   border-bottom-color: var(--glass-border);
@@ -102,6 +108,25 @@
 
 .tab--active:hover {
   color: #fff;
+}
+
+.acciones {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+/* Engranaje "activo": el botón se pinta mientras el panel está abierto.
+   El giro lo maneja motion en el JSX. */
+.config--activo {
+  color: var(--indigo);
+  background: var(--indigo-glow);
+}
+
+.config--activo:hover {
+  color: var(--indigo);
+  background: var(--indigo-glow);
 }
 
 .themeToggle {

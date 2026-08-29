@@ -8,6 +8,7 @@ import NuevoAlumnoForm from "./NuevoAlumnoForm";
 import StudentDetail from "./StudentDetail";
 import AttendanceSheet from "./AttendanceSheet";
 import StudentAttendance from "./StudentAttendance";
+import ReporteActivos from "./ReporteActivos";
 import AnimatedContent from "../ui/AnimatedContent";
 import ScrollFade from "../ui/ScrollFade";
 import BlurText from "../ui/BlurText";
@@ -26,12 +27,14 @@ const normalizar = (v) =>
 export default function StudentsList() {
   const navigate = useNavigate();
   const matchPlanillaGeneral = useMatch("/alumnos/planilla-general");
+  const matchReporteActivos = useMatch("/alumnos/reporte-activos");
   const matchPlanillaIndividual = useMatch("/alumnos/:id/planilla");
   const matchFicha = useMatch("/alumnos/:id");
 
   const idPlanilla = matchPlanillaIndividual?.params.id || null;
+  const RESERVADOS = ["planilla-general", "reporte-activos"];
   const idFicha =
-    matchFicha && matchFicha.params.id !== "planilla-general" ? matchFicha.params.id : null;
+    matchFicha && !RESERVADOS.includes(matchFicha.params.id) ? matchFicha.params.id : null;
   const seleccionadoId = idFicha || idPlanilla || null;
 
   const [students, setStudents] = useState([]);
@@ -109,6 +112,10 @@ export default function StudentsList() {
     await updateStudent(seleccionadoId, datos);
     setFormMode(null);
     cargar();
+  }
+
+  if (matchReporteActivos) {
+    return <ReporteActivos students={students} onVolver={() => navigate("/alumnos")} />;
   }
 
   if (matchPlanillaGeneral) {

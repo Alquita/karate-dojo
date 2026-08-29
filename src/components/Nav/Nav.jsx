@@ -8,7 +8,7 @@ const TABS = [
   { id: "alumnos", label: "Alumnos", to: "/alumnos" },
 ];
 
-export default function Nav({ isDark, onToggleTheme }) {
+export default function Nav({ isDark, onToggleTheme, onToggleConfig, configAbierta }) {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const active = pathname.startsWith("/alumnos") ? "alumnos" : "registro";
@@ -24,7 +24,7 @@ export default function Nav({ isDark, onToggleTheme }) {
   }, []);
 
   return (
-    <nav className={`${styles.nav} ${scrolled ? styles["nav--scrolled"] : ""}`}>
+    <nav className={`${styles.nav} ${scrolled ? styles["nav--scrolled"] : ""} ${configAbierta ? styles["nav--config"] : ""}`}>
       <div className={styles.brand}>
         <img
           className={styles.brand__logo}
@@ -55,6 +55,27 @@ export default function Nav({ isDark, onToggleTheme }) {
           </button>
         ))}
       </div>
+      <div className={styles.acciones}>
+      <button
+        className={`${styles.themeToggle} ${configAbierta ? styles["config--activo"] : ""}`}
+        onClick={onToggleConfig}
+        title="Configuración"
+        aria-label={configAbierta ? "Cerrar configuración" : "Abrir configuración"}
+        aria-expanded={configAbierta}
+      >
+        <motion.svg
+          animate={{ rotate: configAbierta ? 360 : 0 }}
+          transition={
+            configAbierta
+              ? { rotate: { repeat: Infinity, duration: 6, ease: "linear" } }
+              : { duration: 0.5, ease: [0.34, 1.56, 0.64, 1] }
+          }
+          width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+        >
+          <circle cx="12" cy="12" r="3" />
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9c.36.14.75.22 1.11.22H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+        </motion.svg>
+      </button>
       <button
         className={styles.themeToggle}
         onClick={onToggleTheme}
@@ -79,6 +100,7 @@ export default function Nav({ isDark, onToggleTheme }) {
           </svg>
         )}
       </button>
+      </div>
     </nav>
   );
 }

@@ -159,6 +159,32 @@ const sb = {
     if (error) throw error;
     return true;
   },
+
+  async getConfig() {
+    // select("*") para que la app no se rompa si todavía no se corrió el
+    // `alter table` que agrega min_rendir_grupos.
+    const { data, error } = await supabase
+      .from("config")
+      .select("*")
+      .eq("id", 1)
+      .maybeSingle();
+    if (error) throw error;
+    return {
+      clasesPorSemana: data?.clases_por_semana ?? 3,
+      minRendirPct: data?.min_rendir_pct ?? 80,
+      minRendirGrupos: data?.min_rendir_grupos ?? {},
+    };
+  },
+
+  async saveConfig(parcial) {
+    const fila = { id: 1 };
+    if (parcial.clasesPorSemana != null) fila.clases_por_semana = parcial.clasesPorSemana;
+    if (parcial.minRendirPct != null) fila.min_rendir_pct = parcial.minRendirPct;
+    if (parcial.minRendirGrupos != null) fila.min_rendir_grupos = parcial.minRendirGrupos;
+    const { error } = await supabase.from("config").upsert(fila, { onConflict: "id" });
+    if (error) throw error;
+    return sb.getConfig();
+  },
 };
 
 // ─────────────────────────────────────────────────────────────────────────
@@ -166,6 +192,7 @@ const sb = {
 // ─────────────────────────────────────────────────────────────────────────
 
 let students = mockStudents.map((s) => ({ ...s }));
+let configMock = { clasesPorSemana: 3, minRendirPct: 80, minRendirGrupos: {} };
 
 function delay(value, ms = 420) {
   return new Promise((resolve) => setTimeout(() => resolve(value), ms));
@@ -244,6 +271,15 @@ const mock = {
     students[idx] = { ...students[idx], notas: [...students[idx].notas, texto] };
     return delay({ ...students[idx] });
   },
+
+  async getConfig() {
+    return delay({ ...configMock });
+  },
+
+  async saveConfig(parcial) {
+    configMock = { ...configMock, ...parcial };
+    return delay({ ...configMock });
+  },
 };
 
 // ─────────────────────────────────────────────────────────────────────────
@@ -257,3 +293,5 @@ export const addStudent = (...a) => impl.addStudent(...a);
 export const updateStudent = (...a) => impl.updateStudent(...a);
 export const removeStudent = (...a) => impl.removeStudent(...a);
 export const addNota = (...a) => impl.addNota(...a);
+export const getConfig = (...a) => impl.getConfig(...a);
+export const saveConfig = (...a) => impl.saveConfig(...a);

@@ -69,6 +69,22 @@ export function esDan(cinta) {
   return Boolean(cinta) && !COLOR_CINTA[cinta];
 }
 
+// Categoría en el formato que usa la federación para el reporte mensual de activos:
+// los kyu llevan " - Nto Kyu"; los dan van tal cual.
+const FED_KYU = {
+  Blanco: "Blanco - 7mo Kyu",
+  Celeste: "Celeste - 6to Kyu",
+  Amarillo: "Amarillo - 5to Kyu",
+  Naranja: "Naranja - 4to Kyu",
+  Verde: "Verde - 3er Kyu",
+  Azul: "Azul - 2do Kyu",
+  "Marrón": "Marron - 1er Kyu",
+};
+
+export function categoriaFederacion(cinta) {
+  return FED_KYU[cinta] || cinta || "";
+}
+
 export function colorParaCinta(cinta) {
   if (COLOR_CINTA[cinta]) return COLOR_CINTA[cinta];
   if (/juvenil/i.test(cinta)) return DAN_JUVENIL;

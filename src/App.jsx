@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "motion/react";
 import Nav from "./components/Nav/Nav";
 import CheckIn from "./components/CheckIn/CheckIn";
 import StudentsList from "./components/Students/StudentsList";
+import ConfigDrawer from "./components/Config/ConfigDrawer";
 import Noise from "./components/ui/Noise";
 import ErrorBoundary from "./components/ui/ErrorBoundary";
 
@@ -12,6 +13,7 @@ export default function App() {
   const esAlumnos = location.pathname.startsWith("/alumnos");
   const seccion = esAlumnos ? "alumnos" : "registro";
 
+  const [configAbierta, setConfigAbierta] = useState(false);
   const [isDark, setIsDark] = useState(() => {
     try {
       const stored = localStorage.getItem("theme");
@@ -20,11 +22,22 @@ export default function App() {
     return true;
   });
 
+  const primeraVez = useRef(true);
   useEffect(() => {
-    document.documentElement.classList.toggle("light", !isDark);
+    const root = document.documentElement;
+    root.classList.toggle("light", !isDark);
     try {
       localStorage.setItem("theme", isDark ? "dark" : "light");
     } catch {}
+
+    if (primeraVez.current) {
+      primeraVez.current = false;
+      return;
+    }
+    // Transición suave sólo durante el cambio de tema (no permanente).
+    root.classList.add("theme-transition");
+    const t = setTimeout(() => root.classList.remove("theme-transition"), 500);
+    return () => clearTimeout(t);
   }, [isDark]);
 
   return (
@@ -33,7 +46,12 @@ export default function App() {
           cubra todo el viewport (un transform/filter en un ancestro lo recortaría). */}
       <div className="dojo-bg" data-visible={!esAlumnos} aria-hidden="true" />
       <Noise patternAlpha={6} patternRefreshInterval={4} />
-      <Nav isDark={isDark} onToggleTheme={() => setIsDark((d) => !d)} />
+      <Nav
+        isDark={isDark}
+        onToggleTheme={() => setIsDark((d) => !d)}
+        onToggleConfig={() => setConfigAbierta((v) => !v)}
+        configAbierta={configAbierta}
+      />
       <main className={`app__main ${esAlumnos ? "app__main--ancho" : ""}`}>
         <ErrorBoundary>
           <AnimatePresence mode="wait">
@@ -54,6 +72,12 @@ export default function App() {
           </AnimatePresence>
         </ErrorBoundary>
       </main>
+      <ConfigDrawer
+        abierta={configAbierta}
+        onCerrar={() => setConfigAbierta(false)}
+        isDark={isDark}
+        onToggleTheme={() => setIsDark((d) => !d)}
+      />
     </div>
   );
 }

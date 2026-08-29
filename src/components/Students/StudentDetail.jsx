@@ -2,13 +2,24 @@ import { useState } from "react";
 import { colorParaCinta } from "../../data/categories";
 import { formatoCorto, formatoLargo, edadDesde } from "../../utils/dates";
 import { nombreCompleto } from "../../utils/format";
+import { useConfig, umbralGrupo } from "../../lib/config";
+import { asistenciasEnAnio, clasesPosiblesAlDia, porcentaje } from "../../utils/asistencia";
 import styles from "./StudentDetail.module.css";
 
 export default function StudentDetail({ alumno, onBaja, onNota, onEditar, onVerPlanilla }) {
   const [nota, setNota] = useState("");
   const [confirmarBaja, setConfirmarBaja] = useState(false);
+  const { config } = useConfig();
   const color = colorParaCinta(alumno.cinta);
   const edad = edadDesde(alumno.fechaNacimiento);
+
+  const anio = new Date().getFullYear();
+  const umbral = umbralGrupo(config, alumno.grupo);
+  const pctAnio = porcentaje(
+    asistenciasEnAnio(alumno.historial, anio),
+    clasesPosiblesAlDia(anio, config.clasesPorSemana)
+  );
+  const apto = pctAnio >= umbral;
 
   return (
     <div className={styles.detalle}>
@@ -30,6 +41,31 @@ export default function StudentDetail({ alumno, onBaja, onNota, onEditar, onVerP
           <button className="btn btn--danger-ghost" onClick={() => setConfirmarBaja(true)}>
             Dar de baja
           </button>
+        </div>
+      </div>
+
+      <div
+        className={`${styles.rendir} ${apto ? styles["rendir--si"] : styles["rendir--no"]}`}
+        style={{ animationDelay: "0.07s" }}
+      >
+        <span className={styles.rendirIcono} aria-hidden="true">
+          {apto ? (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M5 13l4 4L19 7" />
+            </svg>
+          ) : (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M6 6l12 12M18 6L6 18" />
+            </svg>
+          )}
+        </span>
+        <div>
+          <p className={styles.rendirTitulo}>
+            {apto ? "Apto para rendir" : "Todavía no llega al mínimo"}
+          </p>
+          <p className={styles.rendirSub}>
+            {pctAnio}% de asistencia este año · mínimo {umbral}%
+          </p>
         </div>
       </div>
 

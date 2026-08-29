@@ -377,6 +377,38 @@ ul, ol { list-style: none; }
   to { transform: rotate(360deg); }
 }
 
+/* ── Transición de tema ─────────────────────────────────── */
+/* Sólo activa mientras se togglea claro/oscuro (clase que se pone y se saca). */
+
+@media (prefers-reduced-motion: no-preference) {
+  :root.theme-transition,
+  :root.theme-transition *,
+  :root.theme-transition *::before,
+  :root.theme-transition *::after {
+    transition: background-color 0.45s ease, color 0.45s ease,
+      border-color 0.45s ease, fill 0.45s ease, stroke 0.45s ease,
+      box-shadow 0.45s ease !important;
+  }
+}
+
+/* ── Impresión ──────────────────────────────────────────── */
+
+@media print {
+  .dojo-bg,
+  .noise-overlay,
+  nav {
+    display: none !important;
+  }
+  body {
+    background: #fff;
+    color: #000;
+  }
+  .app__main {
+    max-width: none;
+    padding: 0;
+  }
+}
+
 /* ── Reduced Motion ─────────────────────────────────────── */
 
 @media (prefers-reduced-motion: reduce) {

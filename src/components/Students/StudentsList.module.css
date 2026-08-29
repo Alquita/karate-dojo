@@ -29,16 +29,17 @@
   align-items: start;
 }
 
-/* Los grupos se acomodan en varias columnas según el ancho disponible.
-   column-width se adapta solo: 3 columnas en pantalla grande, 2, luego 1. */
+/* Grilla de 2 columnas: los grupos quedan en orden real (6-8 · 9-12 / Juv · May)
+   y con aire entre paneles. Pasa a 1 columna cuando el layout se aprieta. */
 .grid {
-  column-width: 300px;
-  column-gap: 18px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  align-items: start;
+  align-content: start;
 }
 
 .grupo {
-  break-inside: avoid;
-  margin-bottom: 18px;
   border: 1px solid var(--border);
   border-radius: var(--radius);
   overflow: hidden;
@@ -49,10 +50,6 @@
 
 .grupo:hover {
   box-shadow: var(--shadow-md);
-}
-
-.grupo:last-child {
-  margin-bottom: 0;
 }
 
 .grupoBanda {
@@ -208,6 +205,12 @@
   .modalOverlay { padding: 16px 10px; }
 }
 
+@media (max-width: 1200px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 900px) {
   .body {
     grid-template-columns: 1fr;
@@ -225,10 +228,6 @@
   .headerRight {
     width: 100%;
     justify-content: space-between;
-  }
-  .grid {
-    column-width: auto;
-    columns: 1;
   }
   .grupoCards {
     max-height: none;
