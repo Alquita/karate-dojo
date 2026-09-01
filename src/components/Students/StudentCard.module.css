@@ -27,14 +27,16 @@
   transition: width 0.18s var(--ease-smooth);
 }
 
-/* Cinturón negro: en vez de una franja lisa, "linitas" entrecortadas del color
-   de la categoría (dorado adulto / blanco cadete / celeste juvenil). */
+/* Cinturón negro: N barras del color de la categoría a lo alto de la franja,
+   una por cada grado de dan (Segundo Dan → 2, Tercer Dan → 3...). */
 .beltDan {
   background:
     repeating-linear-gradient(
       to bottom,
-      var(--acc) 0 5px,
-      transparent 5px 12px
+      var(--acc) 0,
+      var(--acc) calc(100% / var(--n) * 0.52),
+      transparent calc(100% / var(--n) * 0.52),
+      transparent calc(100% / var(--n))
     ),
     #0a0a0a;
 }
@@ -43,8 +45,10 @@
   background:
     repeating-linear-gradient(
       to bottom,
-      var(--acc) 0 5px,
-      transparent 5px 12px
+      var(--acc) 0,
+      var(--acc) calc(100% / var(--n) * 0.52),
+      transparent calc(100% / var(--n) * 0.52),
+      transparent calc(100% / var(--n))
     ),
     #1a1a1a;
 }

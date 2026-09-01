@@ -111,6 +111,61 @@
   margin-bottom: 8px;
 }
 
+.cintaFila {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.ascender {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-muted);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+
+.ascender:hover {
+  border-color: var(--indigo);
+  color: var(--indigo);
+}
+
+.ascender--apto {
+  color: var(--moss);
+  background: var(--moss-soft);
+  border-color: color-mix(in srgb, var(--moss) 40%, transparent);
+}
+
+.ascender--apto:hover {
+  border-color: var(--moss);
+  color: var(--moss);
+}
+
+.ascenso {
+  padding: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  margin-bottom: 16px;
+}
+
+.ascensoLabel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--ink);
+  margin-bottom: 12px;
+}
+
+
 .confirm {
   padding: 16px;
   background: var(--danger-soft);
@@ -126,7 +181,12 @@
 
 .confirmButtons {
   display: flex;
-  gap: 10px;
+  gap: 9px;
+}
+
+.confirmButtons :global(.btn) {
+  flex: 1;
+  min-width: 0;
 }
 
 /* ── Secciones de datos ─────────────────────────────── */

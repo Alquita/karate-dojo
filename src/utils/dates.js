@@ -9,6 +9,16 @@ const MESES_LARGO = [
   "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre",
 ];
 
+// Parsea una fecha sin corrimiento de zona horaria: "1976-05-27" como medianoche
+// local, no UTC (si no, en Argentina getDate() devuelve el día anterior).
+function parseFecha(v) {
+  if (typeof v === "string" && /^\d{4}-\d{2}-\d{2}$/.test(v)) {
+    const [y, m, d] = v.split("-").map(Number);
+    return new Date(y, m - 1, d);
+  }
+  return new Date(v);
+}
+
 function toISODate(date) {
   const d = new Date(date);
   const yyyy = d.getFullYear();
@@ -32,12 +42,12 @@ function semanaActual(referencia = new Date()) {
 }
 
 function formatoCorto(isoOrDate) {
-  const d = new Date(isoOrDate);
+  const d = parseFecha(isoOrDate);
   return `${d.getDate()} ${MESES_CORTO[d.getMonth()]}`;
 }
 
 function formatoLargo(isoOrDate) {
-  const d = new Date(isoOrDate);
+  const d = parseFecha(isoOrDate);
   return `${d.getDate()} de ${MESES_LARGO[d.getMonth()]} ${d.getFullYear()}`;
 }
 
@@ -73,7 +83,7 @@ function semanasDelMes(anio, mes) {
 
 function edadDesde(fechaNacimiento) {
   if (!fechaNacimiento) return "";
-  const nac = new Date(fechaNacimiento);
+  const nac = parseFecha(fechaNacimiento);
   if (Number.isNaN(nac.getTime())) return "";
   const hoy = new Date();
   let edad = hoy.getFullYear() - nac.getFullYear();

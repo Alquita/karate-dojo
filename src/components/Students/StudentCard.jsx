@@ -1,4 +1,4 @@
-import { colorParaCinta, accentParaCinta, esDan } from "../../data/categories";
+import { colorParaCinta, accentParaCinta, esDan, danNumero } from "../../data/categories";
 import { edadDesde } from "../../utils/dates";
 import { nombreCompleto } from "../../utils/format";
 import styles from "./StudentCard.module.css";
@@ -17,7 +17,7 @@ export default function StudentCard({ alumno, seleccionado, onClick }) {
     >
       <span
         className={`${styles.belt} ${dan ? styles.beltDan : ""}`}
-        style={dan ? { "--acc": accent } : { background: accent }}
+        style={dan ? { "--acc": accent, "--n": danNumero(alumno.cinta) || 1 } : { background: accent }}
         aria-hidden="true"
       />
       <span className={styles.info}>

@@ -1,6 +1,17 @@
 import { useState } from "react";
+import { motion } from "motion/react";
 import { KYU_BELTS, DAN_LEVELS, GRUPOS, SEXOS } from "../../data/categories";
 import styles from "./NuevoAlumnoForm.module.css";
+
+// Las secciones entran escalonadas una sola vez, rápido.
+const contenedor = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.05, delayChildren: 0.08 } },
+};
+const item = {
+  hidden: { opacity: 0, y: 12 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.3, ease: [0.16, 1, 0.3, 1] } },
+};
 
 const VACIO = {
   nombre: "",
@@ -70,11 +81,12 @@ export default function NuevoAlumnoForm({ alumno, onCancelar, onGuardar }) {
   }
 
   return (
-    <div className={styles.form}>
-      <p className={styles.titulo}>
+    <motion.div className={styles.form} variants={contenedor} initial="hidden" animate="show">
+      <motion.p className={styles.titulo} variants={item}>
         {edicion ? `Editar información — ${alumno.apellido}, ${alumno.nombre}` : "Nuevo alumno"}
-      </p>
+      </motion.p>
 
+      <motion.div variants={item}>
       <p className="section-label">Datos personales</p>
       <div className={styles.grid}>
         <Campo label="Nombre" req>
@@ -109,7 +121,9 @@ export default function NuevoAlumnoForm({ alumno, onCancelar, onGuardar }) {
           <input className="input" value={datos.ocupacion} onChange={set("ocupacion")} />
         </Campo>
       </div>
+      </motion.div>
 
+      <motion.div variants={item}>
       <p className="section-label">Categoría en el dojo</p>
       <div className={styles.grid}>
         <Campo label="Cinturón / categoría" req>
@@ -132,7 +146,9 @@ export default function NuevoAlumnoForm({ alumno, onCancelar, onGuardar }) {
           <input className="input" type="date" value={datos.fechaIngreso} onChange={set("fechaIngreso")} />
         </Campo>
       </div>
+      </motion.div>
 
+      <motion.div variants={item}>
       <p className="section-label">Contacto</p>
       <div className={styles.grid}>
         <Campo label="Correo electrónico">
@@ -145,7 +161,9 @@ export default function NuevoAlumnoForm({ alumno, onCancelar, onGuardar }) {
           <input className="input" value={datos.direccion} onChange={set("direccion")} />
         </Campo>
       </div>
+      </motion.div>
 
+      <motion.div variants={item}>
       <p className="section-label">Observaciones generales / médicas</p>
       <textarea
         className={`input ${styles.textarea}`}
@@ -154,15 +172,16 @@ export default function NuevoAlumnoForm({ alumno, onCancelar, onGuardar }) {
         onChange={set("observaciones")}
         placeholder="Lesiones, alergias, medicación, contacto de emergencia…"
       />
+      </motion.div>
 
       {error && <p className={styles.error}>{error}</p>}
-      <div className={styles.buttons}>
+      <motion.div className={styles.buttons} variants={item}>
         <button className="btn btn--primary" onClick={handleGuardar}>
           {edicion ? "Guardar cambios" : "Guardar alumno"}
         </button>
         <button className="btn btn--secondary" onClick={onCancelar}>Cancelar</button>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }
 

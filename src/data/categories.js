@@ -69,6 +69,31 @@ export function esDan(cinta) {
   return Boolean(cinta) && !COLOR_CINTA[cinta];
 }
 
+// Progresión kyu → dan para el botón "Ascender".
+const DAN_ORDEN = [
+  "Primer Dan", "Segundo Dan", "Tercer Dan", "Cuarto Dan", "Quinto Dan",
+  "Sexto Dan", "Séptimo Dan", "Octavo Dan", "Noveno Dan",
+];
+const ESCALERA = [...KYU_BELTS, ...DAN_ORDEN];
+
+export function siguienteCinta(cinta) {
+  const i = ESCALERA.indexOf(cinta);
+  if (i === -1 || i === ESCALERA.length - 1) return null;
+  return ESCALERA[i + 1];
+}
+
+// Número de dan según el ordinal del nombre ("Segundo Dan" → 2,
+// "Primer Dan Juvenil" → 1). 0 si no es dan.
+const ORDINAL_DAN = {
+  Primer: 1, Segundo: 2, Tercer: 3, Cuarto: 4, Quinto: 5,
+  Sexto: 6, "Séptimo": 7, Octavo: 8, Noveno: 9,
+};
+
+export function danNumero(cinta) {
+  if (!esDan(cinta)) return 0;
+  return ORDINAL_DAN[String(cinta).split(" ")[0]] || 1;
+}
+
 // Categoría en el formato que usa la federación para el reporte mensual de activos:
 // los kyu llevan " - Nto Kyu"; los dan van tal cual.
 const FED_KYU = {

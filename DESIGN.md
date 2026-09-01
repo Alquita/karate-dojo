@@ -243,6 +243,12 @@ The filter bar replaced two native selects with a control that speaks dojo. A **
 - **Signature — the belt stripe:** every student card carries a 6px-wide absolutely-positioned bar down its left edge, `overflow: hidden` on the card clipping it to the radius, filled with the student's belt true-color. Card left padding is `22px` to clear it.
 - **Internal padding:** `16–18px` cards, `24–36px` panels.
 
+### Select (dropdown propio)
+Where the option list has to look like the rest of the app, a custom dropdown replaces the native `<select>` (whose popup the OS draws). The trigger matches the input style (`--surface`, `--border`, `--radius-sm`, a chevron that flips on open, `--indigo` border and glow ring when open). The panel is opaque `--surface` with a 1px Rojo Shidokan border and an `lg` shadow, capped at 260px with its own scroll. Options are IBM Plex Sans 13px, each with a 9px category dot; hover and keyboard focus tint the row in `--indigo-glow`, the selected row fills solid Rojo Shidokan. Closes on select, Escape, or outside click; arrow keys plus Enter navigate. First use: the "Ascender" panel in the ficha.
+
+### Modal del formulario de alumno
+The "Nuevo alumno / Editar" form opens as an overlay. The backdrop fades in (opacity only; its `blur(5px)` is static). The panel materializes: `opacity 0→1`, `y 16→0`, `scale 0.965→1`, and a `filter: blur(10px)→blur(0)` that clears over `0.42s` on an expo-out curve — the same "settling out of a blur" the check-in welcome uses. Inside, the four sections rise and fade in a single quick cascade (`staggerChildren 0.05`, `~0.3s` each). Closing plays a short blur-out (`0.2s`). `AnimatePresence` owns mount and unmount; the global reduced-motion reset near-instants all of it.
+
 ### Inputs / Fields
 - **Style:** `--surface` fill, 1px `--border`, 8px radius, `xs` shadow, `10px 14px` pad, 14px text. Full width by default.
 - **Focus:** border shifts to Rojo Shidokan and a `0 0 0 3px` ring in `--indigo-glow` (18% red) blooms — the same focus signature on inputs, selects, and today's timeline dot.
@@ -273,6 +279,12 @@ The headline of every planilla. A single IBM Plex Mono figure — 34px on the gr
 
 ### Ficha del alumno — indicador "Apto para rendir"
 Directly under the header of `StudentDetail`, a full-width status strip: a 34px filled circle (Moss ✓ when met, Danger ✗ when not) beside a title and a mono sub-line ("{pct}% de asistencia este año · mínimo {umbral}%"). It compares the student's year-to-date attendance rate — attendances this year over `clasesPorSemana × weeks elapsed` — against that age group's threshold from the Config Drawer, so it re-evaluates the moment the instructor changes the setting. Moss and Danger here are state colors on the one element reporting that state, per the One Red Rule.
+
+### Ficha del alumno — botón "Ascender"
+Beside the belt badge in the header, a pill button that promotes the student a rank. It is always available (manual): clicking opens an inline panel with a select defaulting to the next belt in the progression (`siguienteCinta`), then a confirm. When the student meets their group's attendance threshold the button turns Moss with a ✓, as a nudge; otherwise it is a quiet `--surface` pill. It only changes `cinta`; a grade history is future work.
+
+### Franja de cinturón negro — cuenta el grado
+The 4px left stripe on a black-belt card shows exactly N bars of the category accent (gold / white / celeste), one per dan: Segundo Dan is two bars, Cuarto Dan is four. Built with a `repeating-linear-gradient` whose period is `100% / var(--n)`. When a student is promoted, `cinta` changes, `--n` changes, and the stripe re-counts on its own.
 
 ### Planilla grid
 `border-collapse: separate` with sticky `thead` and sticky `tfoot` inside an `overflow: auto` wrapper capped at `72vh`. A 2px `--border` rule falls every seventh column (the week boundary); weekend columns and the totals row carry a faint `--ink` 3% wash. A trained day is a filled cell — `--moss-soft` background plus the Moss ✓ — so attendance reads as a block, not a mark. Rows zebra at `--ink` 2.5%. In the totals row, a zero is `--ink-muted` at 0.35 opacity and light weight so the real counts carry the eye; the grand total and the average % are Rojo Shidokan. The annual view swaps checks for per-month counts on a five-step Moss density scale. After the % column, an "Apto" column shows a Moss ✓ or a Danger ✗ per student — the same exam-eligibility check as the ficha strip, evaluated against that student's group threshold; its footer cell is the count of eligible students.

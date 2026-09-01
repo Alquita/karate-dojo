@@ -187,7 +187,6 @@
   background: rgba(10, 10, 11, 0.62);
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
-  animation: fadeIn 0.2s ease both;
 }
 
 :global(.light) .modalOverlay {
@@ -198,7 +197,6 @@
   width: 100%;
   max-width: 880px;
   margin: auto;
-  animation: slideUp 0.35s var(--ease-bounce) both;
 }
 
 @media (max-width: 600px) {

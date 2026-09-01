@@ -114,6 +114,12 @@ export default function StudentsList() {
     cargar();
   }
 
+  async function handleAscender(nuevaCinta) {
+    if (!seleccionado || !nuevaCinta) return;
+    await updateStudent(seleccionadoId, { ...seleccionado, cinta: nuevaCinta });
+    cargar();
+  }
+
   if (matchReporteActivos) {
     return <ReporteActivos students={students} onVolver={() => navigate("/alumnos")} />;
   }
@@ -208,17 +214,33 @@ export default function StudentsList() {
         </AnimatePresence>
       </div>
 
-      {formMode && (
-        <div className={styles.modalOverlay} onClick={() => setFormMode(null)}>
-          <div className={styles.modalPanel} onClick={(e) => e.stopPropagation()}>
-            <NuevoAlumnoForm
-              alumno={formMode === "editar" ? seleccionado : undefined}
-              onCancelar={() => setFormMode(null)}
-              onGuardar={formMode === "editar" ? handleEditar : handleNuevoAlumno}
-            />
-          </div>
-        </div>
-      )}
+      <AnimatePresence>
+        {formMode && (
+          <motion.div
+            className={styles.modalOverlay}
+            onClick={() => setFormMode(null)}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
+          >
+            <motion.div
+              className={styles.modalPanel}
+              onClick={(e) => e.stopPropagation()}
+              initial={{ opacity: 0, y: 16, scale: 0.965, filter: "blur(10px)" }}
+              animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
+              exit={{ opacity: 0, y: 10, scale: 0.985, filter: "blur(8px)", transition: { duration: 0.2 } }}
+              transition={{ duration: 0.42, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <NuevoAlumnoForm
+                alumno={formMode === "editar" ? seleccionado : undefined}
+                onCancelar={() => setFormMode(null)}
+                onGuardar={formMode === "editar" ? handleEditar : handleNuevoAlumno}
+              />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <div className={styles.body}>
         <div className={styles.grid}>
@@ -298,6 +320,7 @@ export default function StudentsList() {
                   onBaja={handleBaja}
                   onNota={handleNota}
                   onEditar={() => setFormMode("editar")}
+                  onAscender={handleAscender}
                   onVerPlanilla={() => navigate(`/alumnos/${seleccionado.id}/planilla`)}
                 />
               </motion.div>

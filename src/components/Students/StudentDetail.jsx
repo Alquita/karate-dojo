@@ -1,14 +1,29 @@
 import { useState } from "react";
-import { colorParaCinta } from "../../data/categories";
+import {
+  colorParaCinta,
+  accentParaCinta,
+  siguienteCinta,
+  KYU_BELTS,
+  DAN_LEVELS,
+} from "../../data/categories";
 import { formatoCorto, formatoLargo, edadDesde } from "../../utils/dates";
 import { nombreCompleto } from "../../utils/format";
 import { useConfig, umbralGrupo } from "../../lib/config";
 import { asistenciasEnAnio, clasesPosiblesAlDia, porcentaje } from "../../utils/asistencia";
+import Select from "../ui/Select";
 import styles from "./StudentDetail.module.css";
 
-export default function StudentDetail({ alumno, onBaja, onNota, onEditar, onVerPlanilla }) {
+const CINTAS_OPCIONES = [...KYU_BELTS, ...DAN_LEVELS].map((c) => ({
+  value: c,
+  label: c,
+  color: accentParaCinta(c),
+}));
+
+export default function StudentDetail({ alumno, onBaja, onNota, onEditar, onAscender, onVerPlanilla }) {
   const [nota, setNota] = useState("");
   const [confirmarBaja, setConfirmarBaja] = useState(false);
+  const [confirmarAscenso, setConfirmarAscenso] = useState(false);
+  const [nuevaCinta, setNuevaCinta] = useState("");
   const { config } = useConfig();
   const color = colorParaCinta(alumno.cinta);
   const edad = edadDesde(alumno.fechaNacimiento);
@@ -27,12 +42,28 @@ export default function StudentDetail({ alumno, onBaja, onNota, onEditar, onVerP
         <div>
           <p className={styles.grupo}>{alumno.grupo}</p>
           <h2 className={styles.nombre}>{nombreCompleto(alumno)}</h2>
-          <span
-            className="badge"
-            style={{ background: color.bg, color: color.fg, borderColor: color.border }}
-          >
-            {alumno.cinta}
-          </span>
+          <div className={styles.cintaFila}>
+            <span
+              className="badge"
+              style={{ background: color.bg, color: color.fg, borderColor: color.border }}
+            >
+              {alumno.cinta}
+            </span>
+            <button
+              className={`${styles.ascender} ${apto ? styles["ascender--apto"] : ""}`}
+              onClick={() => {
+                setNuevaCinta(siguienteCinta(alumno.cinta) || CINTAS_OPCIONES[0].value);
+                setConfirmarAscenso(true);
+              }}
+            >
+              {apto && (
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M5 13l4 4L19 7" />
+                </svg>
+              )}
+              Ascender
+            </button>
+          </div>
         </div>
         <div className={styles.acciones}>
           <button className="btn btn--secondary" onClick={onEditar}>
@@ -74,9 +105,34 @@ export default function StudentDetail({ alumno, onBaja, onNota, onEditar, onVerP
           <p>Dar de baja a {alumno.nombre} del sistema.</p>
           <div className={styles.confirmButtons}>
             <button className="btn btn--danger" onClick={() => onBaja(alumno.id)}>
-              Confirmar baja
+              Confirmar
             </button>
             <button className="btn btn--secondary" onClick={() => setConfirmarBaja(false)}>
+              Cancelar
+            </button>
+          </div>
+        </div>
+      )}
+
+      {confirmarAscenso && (
+        <div className={styles.ascenso}>
+          <div className={styles.ascensoLabel}>
+            <span>Ascender a {alumno.nombre} a:</span>
+            <Select
+              ariaLabel="Nueva cinta"
+              value={nuevaCinta}
+              onChange={setNuevaCinta}
+              options={CINTAS_OPCIONES}
+            />
+          </div>
+          <div className={styles.confirmButtons}>
+            <button
+              className="btn btn--primary"
+              onClick={() => { onAscender(nuevaCinta); setConfirmarAscenso(false); }}
+            >
+              Confirmar
+            </button>
+            <button className="btn btn--secondary" onClick={() => setConfirmarAscenso(false)}>
               Cancelar
             </button>
           </div>
